@@ -7,59 +7,41 @@
           data-widget="treeview"
           role="menu"
         >
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Статистика</p>
-            </a>
+          <li @click="$router.push('/statistic')" class="nav-item">
+            <i class="nav-icon fas fa-th"></i>
+            <p>Статистика</p>
+          </li>
+          <li @click="$router.push('/')" class="nav-item">
+            <i class="nav-icon fas fa-th"></i>
+            <p>Баннера/Слайдеры</p>
+          </li>
+          <li @click="$router.push('/films')" class="nav-item">
+            <i class="nav-icon fas fa-th"></i>
+            <p>Фильмы</p>
+          </li>
+          <li @click="$router.push('/cinemas')" class="nav-item">
+            <i class="nav-icon fas fa-th"></i>
+            <p>Кинотеатры</p>
+          </li>
+          <li @click="$router.push('/news')" class="nav-item">
+            <i class="nav-icon fas fa-th"></i>
+            <p>Новости</p>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Баннера/Слайдеры</p>
-            </a>
+            <i class="nav-icon fas fa-th"></i>
+            <p>Акции</p>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Фильмы</p>
-            </a>
+            <i class="nav-icon fas fa-th"></i>
+            <p>Страницы</p>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Кинотеатры</p>
-            </a>
+            <i class="nav-icon fas fa-th"></i>
+            <p>Пользователи</p>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Новости</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Акции</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Страницы</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Пользователи</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>Рассылка</p>
-            </a>
+            <i class="nav-icon fas fa-th"></i>
+            <p>Рассылка</p>
           </li>
         </ul>
       </nav>
@@ -86,5 +68,8 @@ export default {};
 .nav-pills .nav-link:hover {
   background: gray;
   color: black;
+}
+.nav-item {
+  cursor: pointer;
 }
 </style>
