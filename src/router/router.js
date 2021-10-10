@@ -3,6 +3,10 @@ import Statistic from "@/pages/Statistic"
 import Films from "@/pages/Films"
 import News from "@/pages/News"
 import Сinemas from "@/pages/Сinemas"
+import Newsletter from "@/pages/Newsletter"
+import Stock from "@/pages/Stock"
+import PagesKino from "@/pages/PagesKino"
+import Users from "@/pages/Users"
 
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -21,11 +25,33 @@ const routes = [
 	},
 	{
 		path: '/news',
-		component: News
+		component: News,
+		children: [
+			{
+				path: ':id',
+				component: Films
+			}
+		]
 	},
 	{
 		path: '/cinemas',
 		component: Сinemas
+	},
+	{
+		path: '/stock',
+		component: Stock
+	},
+	{
+		path: '/pages',
+		component: PagesKino
+	},
+	{
+		path: '/users',
+		component: Users
+	},
+	{
+		path: '/newsletter',
+		component: Newsletter
 	},
 ]
 

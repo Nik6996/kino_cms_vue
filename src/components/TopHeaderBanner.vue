@@ -1,161 +1,119 @@
 <template>
-  <div>
-    <div class="top-banner__title">
-      <strong><p>На главной верх</p></strong>
-    </div>
-    <div class="top-banner">
-      <div class="top-banner__conteiner">
-        <form class="top-banner__create-banner" @submit.prevent>
-          <input type="file" class="input-img" name="img" />
-          <p>
-            URL:
-            <input
-              v-bind:value="url"
-              @input="inputUrl"
-              type="text"
-              placeholder="URL"
-              class="top-banner__url"
-            />
-          </p>
-          <p>
-            Текст:
-            <input
-              v-bind:value="text"
-              @input="inputText"
-              type="text"
-              placeholder="text"
-              class="top-banner__text"
-            />
-          </p>
-          <button type="submit" @click="createBanner" class="top-banner__btn">
-            Добавить
-          </button>
-        </form>
-        <div
-          class="top-banner__list-banner banners"
-          v-for="banner in banners"
-          :key="banner"
-        >
-          <div class="banners__item">
-            <div class="banners__delete">x</div>
-            <img class="banners__img" src="" alt="" />
-            <div class="banners__url"><span>URL: </span>{{ banner.url }}</div>
-            <div class="banners__text">
-              <span>Текст: </span>{{ banner.text }}
-            </div>
-          </div>
+  <div class="top-banner-title">На главной верх</div>
+  <div class="top-banner">
+    <div class="top-banner__size"><p>Размер: 1000x190</p></div>
+    <div class="top-banner__banners">
+      <div class="top-banner__list">
+        <div v-for="(banner, index) in banners" :key="index">
+          <new-banner
+            v-model="banners[index]"
+            @deleteBanner="deleteBanner(index)"
+          />
         </div>
       </div>
-      <div class="btn"><button class="btn-save">Сохранить</button></div>
+      <button @click="createBanner" class="create-banner">Добавить</button>
+    </div>
+    <div class="top-banner__bottom-btns">
+      <div class="top-banner__speed">
+        <form action="formdata" method="post" name="form1">
+          <p>
+            Скорость вращения
+            <select name="list1">
+              <option>5с</option>
+              <option>10с</option>
+              <option>15с</option>
+            </select>
+          </p>
+        </form>
+      </div>
+      <button @click="writeBannerData()" class="save" type="submit">
+        Сохранить
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import NewBanner from "./NewBanner.vue";
+import { getDatabase, ref, set } from "firebase/database";
 export default {
+  components: { NewBanner },
   data() {
     return {
-      banners: [],
-      url: "",
-      text: "",
+      banners: [{ id: 1, url: "", text: "" }],
     };
   },
+
   methods: {
-    inputUrl(event) {
-      this.url = event.target.value;
-    },
-    inputText(event) {
-      this.text = event.target.value;
-    },
     createBanner() {
-      const newBanner = { id: Date.now(), url: this.url, text: this.text };
+      this.banners.push({
+        url: "",
+        text: "",
+      });
+    },
+    deleteBanner(index) {
+      this.banners.splice(index, 1);
+    },
 
-      this.banners.push(newBanner);
-
-      this.url = "";
-      this.text = "";
+    writeBannerData(Id, url, text) {
+      const db = getDatabase();
+      set(ref(db, "https://kino-cms-43b9e-default-rtdb.firebaseio.com/" + Id), {
+        url: url,
+        text: text,
+      });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.top-banner-title {
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+}
 .top-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 350px;
   margin-right: 30px;
   border: solid 2px black;
-  min-height: 300px;
   border-radius: 20px;
-  &__title {
-    display: flex;
-    justify-content: center;
-    font-size: 30px;
+  &__size {
+    margin: 30px 0px 0px 20px;
   }
 
-  &__conteiner {
-    margin-top: 100px;
+  &__banners {
     display: flex;
-    align-items: flex-start;
-    min-height: inherit;
+  }
+
+  &__list {
+    display: flex;
+    margin: 20px 20px 20px 70px;
     flex-wrap: wrap;
   }
 
-  &__create-banner {
-    padding-bottom: 30px;
-    height: inherit;
-    margin: 0px 40px;
+  &__bottom-btns {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  &__url {
-    margin-top: 20px;
-  }
-
-  &__btn {
-    min-width: 183px;
-  }
-
-  &__list-banner {
-    align-items: flex-start;
-  }
-}
-.input-img {
-  width: 183px;
-  height: 100px;
-  background: grey;
-}
-.banners {
-  position: relative;
-  &__delete {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 10px;
-    top: -25px;
-    font-size: 20px;
-  }
-  &__item {
-    margin: 0px 30px;
-  }
-
-  &__url {
     margin: 20px 0px;
   }
 
-  &__img {
-    width: 183px;
-    height: 100px;
-    background: grey;
+  &__speed {
+    margin: 0px 0px 0px 50px;
   }
 }
-.btn {
-  display: flex;
-  justify-content: center;
+.create-banner {
+  position: relative;
+  top: 20px;
+  max-height: 50px;
 }
-.btn-save {
-  width: 150px;
-  height: 50px;
+.save {
+  position: absolute;
+  left: 45%;
+  width: 140px;
+  height: 40px;
+  border-radius: 7px;
 }
 </style>

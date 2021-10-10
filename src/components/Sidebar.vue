@@ -2,45 +2,32 @@
   <div class="main-sidebar">
     <div class="sidebar">
       <nav class="mt-1">
-        <ul
-          class="nav nav-pills nav-sidebar flex-column"
-          data-widget="treeview"
-          role="menu"
-        >
+        <ul class="nav nav-pills nav-sidebar flex-column">
           <li @click="$router.push('/statistic')" class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
             <p>Статистика</p>
           </li>
           <li @click="$router.push('/')" class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
             <p>Баннера/Слайдеры</p>
           </li>
           <li @click="$router.push('/films')" class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
             <p>Фильмы</p>
           </li>
           <li @click="$router.push('/cinemas')" class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
             <p>Кинотеатры</p>
           </li>
           <li @click="$router.push('/news')" class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
             <p>Новости</p>
           </li>
-          <li class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
+          <li @click="$router.push('/stock')" class="nav-item">
             <p>Акции</p>
           </li>
-          <li class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
+          <li @click="$router.push('/pages')" class="nav-item">
             <p>Страницы</p>
           </li>
-          <li class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
+          <li @click="$router.push('/users')" class="nav-item">
             <p>Пользователи</p>
           </li>
-          <li class="nav-item">
-            <i class="nav-icon fas fa-th"></i>
+          <li @click="$router.push('/newsletter')" class="nav-item">
             <p>Рассылка</p>
           </li>
         </ul>
