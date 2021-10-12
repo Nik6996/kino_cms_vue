@@ -26,22 +26,24 @@
           </p>
         </form>
       </div>
-      <button @click="writeBannerData()" class="save" type="submit">
-        Сохранить
-      </button>
+      <button @click="newBanner" class="save" type="submit">Сохранить</button>
     </div>
   </div>
 </template>
 
 <script>
 import NewBanner from "./NewBanner.vue";
-import { getDatabase, ref, set } from "firebase/database";
+
 export default {
   components: { NewBanner },
-  data() {
-    return {
-      banners: [{ id: 1, url: "", text: "" }],
-    };
+
+  computed: {
+    banners() {
+      return this.$store.getters.banners;
+    },
+  },
+  mounted: function () {
+    this.$store.dispatch("loadBanners");
   },
 
   methods: {
@@ -51,16 +53,15 @@ export default {
         text: "",
       });
     },
+    newBanner() {
+      const banner = {
+        url: this.banners.url,
+        text: this.banners.text,
+      };
+      console.log(banner);
+    },
     deleteBanner(index) {
       this.banners.splice(index, 1);
-    },
-
-    writeBannerData(Id, url, text) {
-      const db = getDatabase();
-      set(ref(db, "https://kino-cms-43b9e-default-rtdb.firebaseio.com/" + Id), {
-        url: url,
-        text: text,
-      });
     },
   },
 };

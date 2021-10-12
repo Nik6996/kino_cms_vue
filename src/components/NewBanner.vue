@@ -45,7 +45,6 @@ export default {
     deleteBanner() {
       this.$emit("deleteBanner");
     },
-    async fachBanners() {},
   },
 };
 </script>
