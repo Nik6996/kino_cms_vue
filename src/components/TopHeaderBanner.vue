@@ -26,7 +26,7 @@
           </p>
         </form>
       </div>
-      <button @click="newBanner" class="save" type="submit">Сохранить</button>
+      <button @click="saveBanners" class="save" type="submit">Сохранить</button>
     </div>
   </div>
 </template>
@@ -43,23 +43,26 @@ export default {
     },
   },
   mounted: function () {
-    this.$store.dispatch("loadBanners");
+    // this.$store.dispatch("saveBanners");
   },
 
   methods: {
+    async saveBanners() {
+      const banner = this.$store.getters.banners;
+      await this.$store.dispatch("saveBanners", banner);
+    },
+
+    // async pushName() {
+    //   await this.$store.dispatch("pushName", this.names);
+    // },
+
     createBanner() {
       this.banners.push({
         url: "",
         text: "",
       });
     },
-    newBanner() {
-      const banner = {
-        url: this.banners.url,
-        text: this.banners.text,
-      };
-      console.log(banner);
-    },
+
     deleteBanner(index) {
       this.banners.splice(index, 1);
     },
