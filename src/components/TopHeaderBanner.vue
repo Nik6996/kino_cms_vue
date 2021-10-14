@@ -43,7 +43,7 @@ export default {
     },
   },
   mounted: function () {
-    // this.$store.dispatch("saveBanners");
+    this.$store.dispatch("loadBanners");
   },
 
   methods: {
@@ -51,10 +51,6 @@ export default {
       const banner = this.$store.getters.banners;
       await this.$store.dispatch("saveBanners", banner);
     },
-
-    // async pushName() {
-    //   await this.$store.dispatch("pushName", this.names);
-    // },
 
     createBanner() {
       this.banners.push({
