@@ -14,10 +14,10 @@ export default {
 		addImage() {
 			const fileImg = document.getElementById('input-img').files[0];
 			const storageRef = ref(storage, 'image');
-			const image = uploadBytes(storageRef, fileImg).then((snapshot) => {
+			uploadBytes(storageRef, fileImg).then((snapshot) => {
 
-				const put = put(fileImg);
-				console.log(put);
+				const puts = put(fileImg);
+				console.log(puts);
 			});
 
 		}
