@@ -2,7 +2,8 @@
   <div>
     <form action="#" class="banner-form">
       <div @click="deleteBanner" class="banner-delete"><span>x</span></div>
-      <input type="file" class="banner-img" />
+      <label class="banner-img"> <input type="file" class="input-img" /></label>
+
       <p>
         URL:<input
           @input="updateValue('url', $event.target.value)"
@@ -32,9 +33,7 @@ export default {
       type: Object,
     },
   },
-  data() {
-    return {};
-  },
+
   created() {
     console.log(this);
   },
@@ -81,5 +80,8 @@ p {
   position: absolute;
   right: -10px;
   top: -20px;
+}
+.input-img {
+  display: none;
 }
 </style>

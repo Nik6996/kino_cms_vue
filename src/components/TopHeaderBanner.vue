@@ -53,9 +53,11 @@ export default {
     },
 
     createBanner() {
+      const date = new Date().valueOf();
       this.banners.push({
         url: "",
         text: "",
+        id: date,
       });
     },
 
