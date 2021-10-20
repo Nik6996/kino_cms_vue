@@ -2,7 +2,18 @@
   <div>
     <form action="#" class="banner-form">
       <div @click="deleteBanner" class="banner-delete"><span>x</span></div>
-      <label class="banner-img"> <input type="file" class="input-img" /></label>
+      <label class="banner-img">
+        <input
+          accept=".png, .jpg, .jpeg"
+          type="file"
+          id="input-img"
+          ref="inputImg"
+          v-on:change="addImg()"
+          class="input-img"
+        />
+        <img v-if="fileUrl === ''" src="@/assets/img/prevue.png" alt="" />
+        <img v-else v-bind:src="fileUrl" alt="" />
+      </label>
 
       <p>
         URL:<input
@@ -33,16 +44,29 @@ export default {
       type: Object,
     },
   },
-
-  created() {
-    console.log(this);
+  data() {
+    return {
+      file: "",
+      fileUrl: "",
+    };
   },
+  // created() {
+  //   console.log(this);
+  // },
   methods: {
     updateValue(key, value) {
       this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
     },
     deleteBanner() {
       this.$emit("deleteBanner");
+    },
+    addImg() {
+      this.file = this.$refs.inputImg.files[0];
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        this.fileUrl = ev.currentTarget.result;
+      };
+      reader.readAsDataURL(this.file);
     },
   },
 };
@@ -61,9 +85,15 @@ export default {
   margin: 0px 20px;
 }
 .banner-img {
+  display: flex;
+  justify-content: center;
   width: 150px;
-  height: 100px;
+  min-height: 100px;
   background: grey;
+  img {
+    max-width: 150px;
+    max-height: 100px;
+  }
 }
 .banner-url {
   margin-top: 20px;
