@@ -48,7 +48,15 @@ export default {
 			} finally {
 				commit('setIsLoading', false);
 			}
-		}
+
+		},
+		//-------------------------------
+		// addImageStorage() {
+		// 	const fileImg = document.getElementById("img-banner").files[0];
+		// 	console.log(fileImg)
+		// 	const storageRef = ref(storage, `banners/${fileImg.name}`);
+		// 	uploadBytes(storageRef, fileImg);
+		// },
 	},
 
 	mutations: {

@@ -8,7 +8,7 @@
         type="file"
         id="input-img"
         ref="inputImg"
-        v-on:change="addImg()"
+        v-on:change="previewImg()"
         class="input"
       />
       <img v-bind:src="fileUrl" alt="" />
@@ -28,11 +28,11 @@ export default {
     };
   },
 
-  mounted: function () {
-    this.$store.dispatch("uploadImg");
-  },
+  // mounted: function () {
+  //   this.$store.dispatch("uploadImg");
+  // },
   methods: {
-    addImg() {
+    previewImg() {
       this.file = this.$refs.inputImg.files[0];
       const reader = new FileReader();
       reader.onload = (ev) => {
@@ -40,7 +40,10 @@ export default {
       };
       reader.readAsDataURL(this.file);
       this.imgId = new Date().valueOf();
-      console.log(this.imgId);
+
+      if (this.file !== "") {
+        this.$store.commit("setImg", this.file);
+      }
     },
 
     addInStorege() {

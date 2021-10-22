@@ -44,12 +44,14 @@ export default {
   },
   mounted: function () {
     this.$store.dispatch("loadBanners");
+    //this.$store.dispatch("uploadImg");
   },
 
   methods: {
     async saveBanners() {
       const banner = this.$store.getters.banners;
       await this.$store.dispatch("saveBanners", banner);
+      await this.$store.dispatch("addImage"); // загружаю картинку на сервер
     },
 
     createBanner() {
@@ -57,7 +59,8 @@ export default {
       this.banners.push({
         url: "",
         text: "",
-        id: date,
+        fileId: date,
+        urlImg: "",
       });
     },
 

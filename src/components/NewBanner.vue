@@ -6,9 +6,9 @@
         <input
           accept=".png, .jpg, .jpeg"
           type="file"
-          id="input-img"
+          id="img-banner"
           ref="inputImg"
-          v-on:change="addImg()"
+          v-on:change="previewImg()"
           class="input-img"
         />
         <img v-if="fileUrl === ''" src="@/assets/img/prevue.png" alt="" />
@@ -48,11 +48,22 @@ export default {
     return {
       file: "",
       fileUrl: "",
+      fileId: this.modelValue.fileId,
     };
   },
-  // created() {
-  //   console.log(this);
-  // },
+
+  mounted: function () {
+    this.$store.commit("setImgId", this.fileId); //добавляю id для картинки
+    this.$store.dispatch("uploadImg"); //   получаю ссылку на картинку
+    this.$store.dispatch("saveImg"); // получаю id картинки
+    // const testStore = this.$store.state.urlStorage;   // тут что то пошло не так
+    // console.log(testStore);
+
+    // if (this.fileId == this.$store.getters.nameImg) { // пытаюсь делать логику но нечего не работает, думал жизненный цикл, а видимо нет
+    //   this.fileUrl = this.$store.getters.urlStorage;
+    // }
+  },
+
   methods: {
     updateValue(key, value) {
       this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
@@ -60,13 +71,17 @@ export default {
     deleteBanner() {
       this.$emit("deleteBanner");
     },
-    addImg() {
+    previewImg() {
       this.file = this.$refs.inputImg.files[0];
       const reader = new FileReader();
       reader.onload = (ev) => {
         this.fileUrl = ev.currentTarget.result;
       };
       reader.readAsDataURL(this.file);
+      if (this.file !== "") {
+        this.file.imgId = this.fileId;
+        this.$store.commit("setImg", this.file);
+      }
     },
   },
 };
