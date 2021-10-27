@@ -49,20 +49,11 @@ export default {
       file: "",
       fileUrl: "",
       fileId: this.modelValue.fileId,
+      imgUrl: "",
     };
   },
 
-  mounted: function () {
-    this.$store.commit("setImgId", this.fileId); //добавляю id для картинки
-    this.$store.dispatch("uploadImg"); //   получаю ссылку на картинку
-    this.$store.dispatch("saveImg"); // получаю id картинки
-    // const testStore = this.$store.state.urlStorage;   // тут что то пошло не так
-    // console.log(testStore);
-
-    // if (this.fileId == this.$store.getters.nameImg) { // пытаюсь делать логику но нечего не работает, думал жизненный цикл, а видимо нет
-    //   this.fileUrl = this.$store.getters.urlStorage;
-    // }
-  },
+  mounted: function () {},
 
   methods: {
     updateValue(key, value) {
@@ -82,6 +73,8 @@ export default {
         this.file.imgId = this.fileId;
         this.$store.commit("setImg", this.file);
       }
+
+      // this.$store.commit("setImgId", this.fileId); //добавляю id для картинки
     },
   },
 };

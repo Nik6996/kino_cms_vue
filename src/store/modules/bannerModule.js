@@ -8,9 +8,11 @@ export default {
 		banners: [],
 		isLoading: false,
 		error: null,
+
 	}),
 
 	getters: {
+
 		banners(state) {
 			return state.banners;
 		},
@@ -23,9 +25,14 @@ export default {
 	},
 
 	actions: {
+
 		async saveBanners({ commit }, banners) {
 			const bannersRef = ref(database, 'banners');
-			set(bannersRef, { banners })
+			set(bannersRef, {
+				banners,
+
+			})
+
 		},
 
 		async loadBanners({ commit }) {
@@ -50,16 +57,11 @@ export default {
 			}
 
 		},
-		//-------------------------------
-		// addImageStorage() {
-		// 	const fileImg = document.getElementById("img-banner").files[0];
-		// 	console.log(fileImg)
-		// 	const storageRef = ref(storage, `banners/${fileImg.name}`);
-		// 	uploadBytes(storageRef, fileImg);
-		// },
+
 	},
 
 	mutations: {
+
 		setBanners(state, banners) {
 			state.banners = banners;
 		},
@@ -68,7 +70,8 @@ export default {
 		},
 		setError(state, error) {
 			state.error = error;
-		}
+		},
+
 	},
 }
 
@@ -79,78 +82,3 @@ export default {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { database } from "../../firebaseConfig";
-
-// import { getDatabase, ref, set, child, get } from "firebase/database";
-
-
-// export default {
-// 	state: () => ({
-// 		banners: [{ url: "", text: "" }],
-// 	}),
-// 	getters: {
-// 		banners(state) {
-// 			return state.banners
-// 		}
-// 	},
-// 	mutations: {
-// 		loadBanner(state, payload) {
-// 			state.banners = payload
-// 		},
-// 		// loadBanner(state, payload) {
-// 		// 	state.banners = payload
-// 		// }
-
-// 	},
-// 	actions: {
-
-// 		async saveBanners({ commit }, banners) {
-// 			const database = getDatabase();
-// 			set(ref(database, 'banners'), { banners })
-
-// 		},
-// 		async loadBanners() {
-// 			const database = ref(getDatabase());
-// 			get(child(database, 'banners')).then((banner) => {
-// 				if (banner.exists()) {
-// 					let bannerVal = banner.val().banners
-// 					const bannersArray = [];
-// 					Object.keys(bannerVal).forEach(key => {
-// 						const bannerPush = bannerVal[key];
-// 						bannersArray.push(bannerPush)
-// 					});
-// 					commit('loadBanner', bannersArray);
-// 					// commit('loadBanner', bannerVal);
-// 					console.log(bannersArray);
-// 					console.log(banner.val());
-// 				} else {
-// 					console.log("No data available");
-// 				}
-// 			}).catch((error) => {
-// 				console.error(error);
-// 			});
-// 		}
-
-// 	},
-
-
-// }

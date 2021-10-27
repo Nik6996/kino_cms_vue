@@ -7,7 +7,7 @@ import bannerImg from './modules/bannerImg'
 export default createStore({
 
 	modules: {
-		bannerModule,
+		banners: bannerModule,
 		bannerImg,
 
 	}

@@ -37,6 +37,10 @@ import NewBanner from "./NewBanner.vue";
 export default {
   components: { NewBanner },
 
+  data: () => {
+    return {};
+  },
+
   computed: {
     banners() {
       return this.$store.getters.banners;
@@ -49,9 +53,14 @@ export default {
 
   methods: {
     async saveBanners() {
-      const banner = this.$store.getters.banners;
-      await this.$store.dispatch("saveBanners", banner);
       await this.$store.dispatch("addImage"); // загружаю картинку на сервер
+      // const urlImg = await this.$store.getters.getImgUrl;
+
+      // console.log(urlImg);
+      const banner = this.$store.getters.banners;
+      // console.log(banner);
+
+      await this.$store.dispatch("saveBanners", banner);
     },
 
     createBanner() {
@@ -60,8 +69,8 @@ export default {
         url: "",
         text: "",
         fileId: date,
-        urlImg: "",
       });
+      // console.log(this.banners);
     },
 
     deleteBanner(index) {
