@@ -1,13 +1,14 @@
 <template>
   <div class="top-banner-title">На главной верх</div>
   <div class="top-banner">
+    <div v-if="isLoading" class="top-banner__overlay"></div>
     <div class="top-banner__size"><p>Размер: 1000x190</p></div>
     <div class="top-banner__banners">
       <div class="top-banner__list">
-        <div v-for="(banner, index) in banners" :key="index">
+        <div v-for="(banner, index) in formData.items" :key="index">
           <new-banner
-            v-model="banners[index]"
-            @deleteBanner="deleteBanner(index)"
+            v-model="formData.items[index]"
+            @deleteBanner="removeBanner(index)"
           />
         </div>
       </div>
@@ -26,55 +27,65 @@
           </p>
         </form>
       </div>
-      <button @click="saveBanners" class="save" type="submit">Сохранить</button>
+      <button @click="save" class="save" type="submit">Сохранить</button>
     </div>
   </div>
 </template>
 
 <script>
 import NewBanner from "./NewBanner.vue";
+import { mapGetters } from "vuex";
+import { cloneDeep } from "lodash/fp";
 
 export default {
+  data() {
+    return {
+      formData: {
+        items: [],
+        interval: 5,
+      },
+    };
+  },
   components: { NewBanner },
 
-  data: () => {
-    return {};
+  computed: {
+    ...mapGetters({
+      isLoading: "banners/isLoading",
+      items: "banners/items",
+      interval: "banners/interval",
+    }),
   },
 
-  computed: {
-    banners() {
-      return this.$store.getters.banners;
+  watch: {
+    items: {
+      handler(items) {
+        this.formData.items = cloneDeep(items);
+      },
+    },
+    interval: {
+      handler(interval) {
+        this.formData.interval = interval;
+      },
     },
   },
+
   mounted: function () {
-    this.$store.dispatch("loadBanners");
-    //this.$store.dispatch("uploadImg");
+    this.$store.dispatch("banners/load");
   },
 
   methods: {
-    async saveBanners() {
-      await this.$store.dispatch("addImage"); // загружаю картинку на сервер
-      // const urlImg = await this.$store.getters.getImgUrl;
-
-      // console.log(urlImg);
-      const banner = this.$store.getters.banners;
-      // console.log(banner);
-
-      await this.$store.dispatch("saveBanners", banner);
-    },
-
     createBanner() {
-      const date = new Date().valueOf();
-      this.banners.push({
+      this.formData.items.push({
         url: "",
         text: "",
-        fileId: date,
+        image: "",
       });
-      // console.log(this.banners);
     },
-
-    deleteBanner(index) {
-      this.banners.splice(index, 1);
+    removeBanner(index) {
+      this.formData.items.splice(index, 1);
+    },
+    save() {
+      this.$store.dispatch("banners/save", this.formData);
     },
   },
 };
@@ -96,6 +107,17 @@ export default {
   border-radius: 20px;
   &__size {
     margin: 30px 0px 0px 20px;
+  }
+
+  &__overlay {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(32, 31, 31, 0.733);
+    border-radius: 20px;
   }
 
   &__banners {

@@ -6,10 +6,9 @@
         <input
           accept=".png, .jpg, .jpeg"
           type="file"
-          id="img-banner"
           ref="inputImg"
-          v-on:change="previewImg()"
           class="input-img"
+          v-on:change="previewImg()"
         />
         <img v-if="fileUrl === ''" src="@/assets/img/prevue.png" alt="" />
         <img v-else v-bind:src="fileUrl" alt="" />
@@ -46,14 +45,21 @@ export default {
   },
   data() {
     return {
-      file: "",
       fileUrl: "",
-      fileId: this.modelValue.fileId,
-      imgUrl: "",
+      file: "",
+      // fileId: 11,
     };
   },
 
   mounted: function () {},
+
+  watch: {
+    file: {
+      handler(file) {
+        this.$emit("update:modelValue", { ...this.modelValue, file });
+      },
+    },
+  },
 
   methods: {
     updateValue(key, value) {
@@ -64,16 +70,17 @@ export default {
     },
     previewImg() {
       this.file = this.$refs.inputImg.files[0];
+
       const reader = new FileReader();
       reader.onload = (ev) => {
         this.fileUrl = ev.currentTarget.result;
       };
       reader.readAsDataURL(this.file);
-      if (this.file !== "") {
-        this.file.imgId = this.fileId;
-        this.$store.commit("setImg", this.file);
-      }
 
+      if (this.file !== "") {
+        //this.file.imgId = this.fileId;
+        // this.$store.commit("setImg", this.file);
+      }
       // this.$store.commit("setImgId", this.fileId); //добавляю id для картинки
     },
   },
