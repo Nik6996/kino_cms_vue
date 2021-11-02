@@ -96,6 +96,7 @@ export const bannerModule = {
 							}
 							updateImg()
 
+
 						}
 						set(newItemRef, {
 							...item,
