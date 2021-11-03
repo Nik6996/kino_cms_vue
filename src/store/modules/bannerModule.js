@@ -3,7 +3,7 @@ import { database, storage } from "../../firebaseConfig";
 import { ref, push, set, get, query, orderByChild } from "firebase/database";
 
 // import { firebaseApp,  } from "../../firebaseConfig";
-import { ref as refStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 
 const default_interval = 5;
@@ -49,61 +49,64 @@ export const bannerModule = {
 						const databaseItem = itemRecord.val();
 						const matchingItem = items.find(item => databaseItem.id === item.id);
 						if (!matchingItem) {
-							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${databaseItem.id}`), null)
+							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${databaseItem.id}`), null);
+							const storageRef = refStorage(storage, `banners/${databaseItem.id}`);
+							deleteObject(storageRef);
 						}
 					})
 					items.forEach((item, index) => {
-						if (item.id) {
-							//console.log(item.file)
-							if (item.file) {
 
-								//delete item.file;
-							}
+						if (item.id) {
+
 							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
 								...item,
 								order: index,
+
 							})
 						} else {
-							const newItemRef = push(itemsRef);
+
 							if (item.file) {
 
 								//delete item.file;
 							}
-							set(newItemRef, {
-								...item,
-								id: newItemRef.key,
-								order: index
-							});
+							// set(newItemRef, {
+							// 	...item,
+
+							// 	order: index
+							// });
 						}
 					});
 				} else {
 					items.forEach((item, index) => {
-						const newItemRef = push(itemsRef)
+
 
 						if (item.file) {
 							// TODO: update file
-							//console.log(item.file)
+
 							async function updateImg() {
 								const img = item.file
-								console.log(img)
-								const storageRef = refStorage(storage, `banners/items`);
-								uploadBytes(storageRef, img);
-								const url = await getDownloadURL(refStorage(storage, `banners/items`))
 
-								console.log(url)
-								item.fileUrl = url //хз
-								//delete item.file;
+								const storageRef = refStorage(storage, `banners/${item.file.imgId}`);
+								await uploadBytes(storageRef, img);
+								const url = await getDownloadURL(refStorage(storage, `banners/${item.file.imgId}`))
+
+								set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
+									...item,
+									order: index,
+									image: url
+								})
+
 							}
 							updateImg()
 
 
+						} else {
+							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
+								...item,
+								order: index,
+							})
 						}
-						set(newItemRef, {
-							...item,
-							id: newItemRef.key,
-							order: index,
 
-						})
 					});
 				}
 

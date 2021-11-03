@@ -75,10 +75,12 @@ export default {
 
   methods: {
     createBanner() {
+      const date = new Date().valueOf();
       this.formData.items.push({
         url: "",
         text: "",
         image: "",
+        id: date,
       });
     },
     removeBanner(index) {

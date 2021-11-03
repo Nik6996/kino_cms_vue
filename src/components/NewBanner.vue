@@ -10,7 +10,16 @@
           class="input-img"
           v-on:change="previewImg()"
         />
-        <img v-if="fileUrl === ''" src="@/assets/img/prevue.png" alt="" />
+        <img
+          v-if="fileUrl === '' && this.modelValue.image === ''"
+          src="@/assets/img/prevue.png"
+          alt=""
+        />
+        <img
+          v-else-if="this.modelValue.image !== ''"
+          v-bind:src="this.modelValue.image"
+          alt=""
+        />
         <img v-else v-bind:src="fileUrl" alt="" />
       </label>
 
@@ -47,7 +56,8 @@ export default {
     return {
       fileUrl: "",
       file: "",
-      // fileId: 11,
+
+      fileId: this.modelValue.id,
     };
   },
 
@@ -78,10 +88,8 @@ export default {
       reader.readAsDataURL(this.file);
 
       if (this.file !== "") {
-        //this.file.imgId = this.fileId;
-        // this.$store.commit("setImg", this.file);
+        this.file.imgId = this.fileId;
       }
-      // this.$store.commit("setImgId", this.fileId); //добавляю id для картинки
     },
   },
 };
