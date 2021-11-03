@@ -56,24 +56,23 @@ export const bannerModule = {
 					})
 					items.forEach((item, index) => {
 
-						if (item.id) {
+						if (item.image === '') {
+							async function updateImg() {
+								const img = item.file
 
-							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
-								...item,
-								order: index,
+								const storageRef = refStorage(storage, `banners/${item.file.imgId}`);
+								await uploadBytes(storageRef, img);
+								const url = await getDownloadURL(refStorage(storage, `banners/${item.file.imgId}`))
 
-							})
-						} else {
+								set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
+									...item,
+									order: index,
+									image: url
+								})
 
-							if (item.file) {
-
-								//delete item.file;
 							}
-							// set(newItemRef, {
-							// 	...item,
+							updateImg()
 
-							// 	order: index
-							// });
 						}
 					});
 				} else {
