@@ -2,7 +2,6 @@
 import { database, storage } from "../../firebaseConfig";
 import { ref, push, set, get, query, orderByChild } from "firebase/database";
 
-// import { firebaseApp,  } from "../../firebaseConfig";
 import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 
@@ -73,6 +72,12 @@ export const bannerModule = {
 							}
 							updateImg()
 
+						} else {
+							set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
+								...item,
+								order: index,
+
+							})
 						}
 					});
 				} else {

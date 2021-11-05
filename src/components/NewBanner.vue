@@ -15,6 +15,7 @@
           src="@/assets/img/prevue.png"
           alt=""
         />
+
         <img
           v-else-if="this.modelValue.image !== ''"
           v-bind:src="this.modelValue.image"
