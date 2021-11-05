@@ -10,18 +10,7 @@
           class="input-img"
           v-on:change="previewImg()"
         />
-        <img
-          v-if="fileUrl === '' && this.modelValue.image === ''"
-          src="@/assets/img/prevue.png"
-          alt=""
-        />
-
-        <img
-          v-else-if="this.modelValue.image !== ''"
-          v-bind:src="this.modelValue.image"
-          alt=""
-        />
-        <img v-else v-bind:src="fileUrl" alt="" />
+        <img v-bind:src="imageSrc" alt="" />
       </label>
 
       <p>
@@ -47,18 +36,34 @@
 </template>
 
 <script>
+const defaultImg = require("@/assets/img/prevue.png");
 export default {
   props: {
     modelValue: {
       type: Object,
     },
   },
+
+  computed: {
+    imageSrc() {
+      if (this.fileUrl) {
+        return this.fileUrl;
+      } else if (this.modelValue.image) {
+        return this.modelValue.image;
+      } else {
+        return defaultImg;
+      }
+    },
+
+    fileId() {
+      return this.modelValue.id;
+    },
+  },
+
   data() {
     return {
-      fileUrl: "",
-      file: "",
-
-      fileId: this.modelValue.id,
+      fileUrl: null,
+      file: null,
     };
   },
 
@@ -67,7 +72,7 @@ export default {
   watch: {
     file: {
       handler(file) {
-        this.$emit("update:modelValue", { ...this.modelValue, file });
+        this.updateValue("file", file);
       },
     },
   },
@@ -80,17 +85,22 @@ export default {
       this.$emit("deleteBanner");
     },
     previewImg() {
-      this.file = this.$refs.inputImg.files[0];
-
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        this.fileUrl = ev.currentTarget.result;
-      };
-      reader.readAsDataURL(this.file);
-
-      if (this.file !== "") {
-        this.file.imgId = this.fileId;
+      if (!this.$refs.inputImg || !this.$refs.inputImg.files?.length) {
+        this.file = null;
+        this.fileUrl = null;
+        return;
       }
+
+      const file = this.$refs.inputImg.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (ev) => {
+        this.file = file;
+        this.fileUrl = ev.currentTarget.result;
+        this.file.imgId = this.fileId;
+      };
+
+      reader.readAsDataURL(file);
     },
   },
 };

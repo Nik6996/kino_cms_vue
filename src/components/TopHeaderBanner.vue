@@ -1,33 +1,35 @@
 <template>
-  <div class="top-banner-title">На главной верх</div>
-  <div class="top-banner">
-    <div v-if="isLoading" class="top-banner__overlay"></div>
-    <div class="top-banner__size"><p>Размер: 1000x190</p></div>
-    <div class="top-banner__banners">
-      <div class="top-banner__list">
-        <div v-for="(banner, index) in formData.items" :key="index">
-          <new-banner
-            v-model="formData.items[index]"
-            @deleteBanner="removeBanner(index)"
-          />
+  <div>
+    <div class="top-banner-title">На главной верх</div>
+    <div class="top-banner">
+      <div v-if="isLoading" class="top-banner__overlay"></div>
+      <div class="top-banner__size"><p>Размер: 1000x190</p></div>
+      <div class="top-banner__banners">
+        <div class="top-banner__list">
+          <div v-for="(banner, index) in formData.items" :key="index">
+            <new-banner
+              v-model="formData.items[index]"
+              @deleteBanner="removeBanner(index)"
+            />
+          </div>
         </div>
+        <button @click="createBanner" class="create-banner">Добавить</button>
       </div>
-      <button @click="createBanner" class="create-banner">Добавить</button>
-    </div>
-    <div class="top-banner__bottom-btns">
-      <div class="top-banner__speed">
-        <form action="formdata" method="post" name="form1">
-          <p>
-            Скорость вращения
-            <select name="list1">
-              <option>5с</option>
-              <option>10с</option>
-              <option>15с</option>
-            </select>
-          </p>
-        </form>
+      <div class="top-banner__bottom-btns">
+        <div class="top-banner__speed">
+          <form action="formdata" method="post" name="form1">
+            <p>
+              Скорость вращения
+              <select v-model="formData.interval" name="list1">
+                <option>5с</option>
+                <option>10с</option>
+                <option>15с</option>
+              </select>
+            </p>
+          </form>
+        </div>
+        <button @click="save" class="save" type="submit">Сохранить</button>
       </div>
-      <button @click="save" class="save" type="submit">Сохранить</button>
     </div>
   </div>
 </template>
@@ -42,7 +44,7 @@ export default {
     return {
       formData: {
         items: [],
-        interval: 5,
+        interval: null,
       },
     };
   },

@@ -1,17 +1,20 @@
 
 import { database, storage } from "../../firebaseConfig";
-import { ref, push, set, get, query, orderByChild } from "firebase/database";
+import { ref, set, get, } from "firebase/database";
 
 import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 
 const default_interval = 5;
-const BANNERS_DATABASE_PATH = 'banners';
+const BANNERS_DATABASE_PATH = 'bannersMainTop';
 
 export const bannerModule = {
   namespaced: true,
 
   state: () => ({
+    // currentlanguage: 'ru',
+    // defaultLanguage: 'en'
+
     items: [],
     interval: default_interval,
     error: null,
@@ -39,9 +42,35 @@ export const bannerModule = {
       commit('setError', null);
       commit('setIsLoading', true);
 
+      async function updateImg(item, index) {
+        const img = item.file
+        // delete item.file
+        const storageRef = refStorage(storage, `${BANNERS_DATABASE_PATH}/${item.file.imgId}`);
+        await uploadBytes(storageRef, img);
+
+        const url = await getDownloadURL(refStorage(storage, `${BANNERS_DATABASE_PATH}/${item.file.imgId}`))
+        delete item.file
+        set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
+          ...item,
+          order: index,
+          image: url
+        })
+
+
+
+        // updatatedBanners.push({
+        //   ...item,
+        //   order: index,
+        //   image: url
+        // })
+
+      }
+
       try {
         const itemsRef = ref(database, `${BANNERS_DATABASE_PATH}/items`)
-        const itemsRecord = await get(itemsRef)
+        const itemsRecord = await get(itemsRef);
+        // const updatatedBanners = [];
+
         if (itemsRecord.exists()) {
           itemsRecord.forEach(itemRecord => {
 
@@ -49,29 +78,13 @@ export const bannerModule = {
             const matchingItem = items.find(item => databaseItem.id === item.id);
             if (!matchingItem) {
               set(ref(database, `${BANNERS_DATABASE_PATH}/items/${databaseItem.id}`), null);
-              const storageRef = refStorage(storage, `banners/${databaseItem.id}`);
+              const storageRef = refStorage(storage, `${BANNERS_DATABASE_PATH}/${databaseItem.id}`);
               deleteObject(storageRef);
             }
           })
           items.forEach((item, index) => {
-
-            if (item.image === '') {
-              async function updateImg() {
-                const img = item.file
-
-                const storageRef = refStorage(storage, `banners/${item.file.imgId}`);
-                await uploadBytes(storageRef, img);
-                const url = await getDownloadURL(refStorage(storage, `banners/${item.file.imgId}`))
-
-                set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
-                  ...item,
-                  order: index,
-                  image: url
-                })
-
-              }
-              updateImg()
-
+            if (item.file) {
+              updateImg(item, index)
             } else {
               set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
                 ...item,
@@ -79,6 +92,7 @@ export const bannerModule = {
 
               })
             }
+
           });
         } else {
           items.forEach((item, index) => {
@@ -86,22 +100,7 @@ export const bannerModule = {
 
             if (item.file) {
               // TODO: update file
-
-              async function updateImg() {
-                const img = item.file
-
-                const storageRef = refStorage(storage, `banners/${item.file.imgId}`);
-                await uploadBytes(storageRef, img);
-                const url = await getDownloadURL(refStorage(storage, `banners/${item.file.imgId}`))
-
-                set(ref(database, `${BANNERS_DATABASE_PATH}/items/${item.id}`), {
-                  ...item,
-                  order: index,
-                  image: url
-                })
-
-              }
-              updateImg()
+              updateImg(item, index);
 
 
             } else {
@@ -111,8 +110,12 @@ export const bannerModule = {
               })
             }
 
+
           });
         }
+
+
+        //set(ref(database, `${BANNERS_DATABASE_PATH}/items`), updatedBanners);
 
         const intervalRef = ref(database, `${BANNERS_DATABASE_PATH}/interval`);
         set(intervalRef, interval);
@@ -134,8 +137,8 @@ export const bannerModule = {
 
       try {
         const itemsRef = ref(database, `${BANNERS_DATABASE_PATH}/items`);
-        const itemsQuery = query(itemsRef, orderByChild("order"));
-        const itemsRecord = await get(itemsQuery);
+        // const itemsQuery = query(itemsRef, orderByChild("order"));
+        const itemsRecord = await get(itemsRef);
 
         if (itemsRecord.exists()) {
           const items = [];
@@ -178,3 +181,15 @@ export const bannerModule = {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
