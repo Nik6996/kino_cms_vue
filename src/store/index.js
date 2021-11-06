@@ -1,12 +1,13 @@
 import { createStore } from 'vuex'
 
-import { bannerModule } from './modules/bannerModule'
-
+import { bannersMainTop } from './modules/bannersMainTop'
+import { backgroundBanner } from './modules/backgroundBanner'
 
 
 export default createStore({
 
 	modules: {
-		banners: bannerModule,
+		bannersMainTop: bannersMainTop,
+		backgroundBanner: backgroundBanner,
 	}
 })

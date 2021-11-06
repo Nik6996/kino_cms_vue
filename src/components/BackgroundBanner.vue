@@ -6,12 +6,13 @@
       </div>
       <div class="background-banner__main">
         <div class="background-banner__size"><p>Размер: 2000x3000</p></div>
-        <form class="background-banner__form" action="#">
+        <div class="background-banner__form">
           <div class="background-banner__radio">
             <p>
               <input
+                value="Фото на фоне"
+                v-model="item.radioBtn"
                 class="background-banner__input"
-                name="photo"
                 type="radio"
                 id="photoOnBackground"
               />
@@ -19,8 +20,9 @@
             </p>
             <p>
               <input
+                value="Просто фото"
+                v-model="item.radioBtn"
                 class="background-banner__input"
-                name="photo"
                 type="radio"
                 id="JustAPhoto"
               />
@@ -29,22 +31,108 @@
           </div>
           <div class="background-banner__img">
             <label class="banner-img">
-              <input accept=".png, .jpg, .jpeg" type="file" class="input-img" />
-              <img src="" alt="" />
+              <input
+                ref="ImgInput"
+                class="input-img"
+                v-on:change="previewImg()"
+                accept=".png, .jpg, .jpeg"
+                type="file"
+              />
+              <img v-bind:src="imageSrc" alt="" />
             </label>
+            <strong>{{ item.radioBtn }}</strong>
           </div>
           <div class="background-banner__btns">
-            <button class="background-banner__add">Добавить</button>
-            <button class="background-banner__delete">Удалить</button>
+            <button @click="save" class="background-banner__add">
+              Добавить
+            </button>
+            <button @click="remove" class="background-banner__delete">
+              Удалить
+            </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+const defaultImg = require("@/assets/img/prevue.png");
+export default {
+  data() {
+    return {
+      item: {
+        file: null,
+        radioBtn: null,
+      },
+      fileUrl: null,
+      urlStorage: null,
+    };
+  },
+  mounted: function () {
+    this.$store.dispatch("backgroundBanner/load");
+  },
+
+  computed: {
+    imageSrc() {
+      if (this.fileUrl) {
+        return this.fileUrl;
+      } else if (this.urlStorage) {
+        return this.urlStorage;
+      } else {
+        return defaultImg;
+      }
+    },
+
+    ...mapGetters({
+      url: "backgroundBanner/getFile",
+      radio: "backgroundBanner/getRadio",
+    }),
+  },
+  watch: {
+    url: {
+      handler(url) {
+        this.urlStorage = url;
+      },
+    },
+    radio: {
+      handler(radio) {
+        this.item.radioBtn = radio;
+      },
+    },
+  },
+
+  methods: {
+    save() {
+      this.$store.dispatch("backgroundBanner/save", this.item);
+    },
+    remove() {
+      this.$store.dispatch("backgroundBanner/remove");
+      this.fileUrl = null;
+      this.item.radioBtn = null;
+      this.urlStorage = null;
+    },
+
+    previewImg() {
+      if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
+        this.file = null;
+        this.fileUrl = null;
+        return;
+      }
+
+      const file = this.$refs.ImgInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (ev) => {
+        this.item.file = file;
+        this.fileUrl = ev.currentTarget.result;
+      };
+
+      reader.readAsDataURL(file);
+    },
+  },
+};
 </script>
 
 <style  lang="scss" scoped>
@@ -103,8 +191,8 @@ export default {};
   background: grey;
   border: solid 2px black;
   img {
-    max-width: 150px;
-    max-height: 100px;
+    max-width: 130px;
+    max-height: 80px;
   }
 }
 .input-img {

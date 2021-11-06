@@ -52,9 +52,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      isLoading: "banners/isLoading",
-      items: "banners/items",
-      interval: "banners/interval",
+      isLoading: "bannersMainTop/isLoading",
+      items: "bannersMainTop/items",
+      interval: "bannersMainTop/interval",
     }),
   },
 
@@ -72,7 +72,7 @@ export default {
   },
 
   mounted: function () {
-    this.$store.dispatch("banners/load");
+    this.$store.dispatch("bannersMainTop/load");
   },
 
   methods: {
@@ -89,7 +89,7 @@ export default {
       this.formData.items.splice(index, 1);
     },
     save() {
-      this.$store.dispatch("banners/save", this.formData);
+      this.$store.dispatch("bannersMainTop/save", this.formData);
     },
   },
 };

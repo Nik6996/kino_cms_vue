@@ -8,12 +8,11 @@ import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "fi
 const default_interval = 5;
 const BANNERS_DATABASE_PATH = 'bannersMainTop';
 
-export const bannerModule = {
+export const bannersMainTop = {
   namespaced: true,
 
   state: () => ({
-    // currentlanguage: 'ru',
-    // defaultLanguage: 'en'
+
 
     items: [],
     interval: default_interval,
@@ -58,18 +57,14 @@ export const bannerModule = {
 
 
 
-        // updatatedBanners.push({
-        //   ...item,
-        //   order: index,
-        //   image: url
-        // })
+
 
       }
 
       try {
         const itemsRef = ref(database, `${BANNERS_DATABASE_PATH}/items`)
         const itemsRecord = await get(itemsRef);
-        // const updatatedBanners = [];
+
 
         if (itemsRecord.exists()) {
           itemsRecord.forEach(itemRecord => {
@@ -96,7 +91,6 @@ export const bannerModule = {
           });
         } else {
           items.forEach((item, index) => {
-
 
             if (item.file) {
               // TODO: update file
@@ -137,7 +131,7 @@ export const bannerModule = {
 
       try {
         const itemsRef = ref(database, `${BANNERS_DATABASE_PATH}/items`);
-        // const itemsQuery = query(itemsRef, orderByChild("order"));
+
         const itemsRecord = await get(itemsRef);
 
         if (itemsRecord.exists()) {
