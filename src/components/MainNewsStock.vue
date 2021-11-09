@@ -80,7 +80,6 @@ export default {
       const date = new Date().valueOf();
       this.formData.items.push({
         url: "",
-        text: "",
         image: "",
         id: date,
       });
@@ -117,9 +116,8 @@ export default {
     position: absolute;
     z-index: 10;
     top: 0;
-    bottom: 0;
     left: 0;
-    right: 0;
+    height: 100%;
     background: rgba(32, 31, 31, 0.733);
     border-radius: 20px;
   }

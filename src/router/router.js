@@ -7,6 +7,7 @@ import Newsletter from "@/pages/Newsletter"
 import Stock from "@/pages/Stock"
 import PagesKino from "@/pages/PagesKino"
 import Users from "@/pages/Users"
+import CreateFilm from "@/pages/CreateFilm"
 
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -21,7 +22,8 @@ const routes = [
 	},
 	{
 		path: '/films',
-		component: Films
+		component: Films,
+
 	},
 	{
 		path: '/news',
@@ -52,6 +54,10 @@ const routes = [
 	{
 		path: '/newsletter',
 		component: Newsletter
+	},
+	{
+		path: '/createFilm',
+		component: CreateFilm
 	},
 ]
 

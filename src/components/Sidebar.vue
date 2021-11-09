@@ -40,7 +40,7 @@
 export default {};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .sidebar {
   border: solid 2px black;
   max-width: 200px;

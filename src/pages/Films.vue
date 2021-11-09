@@ -1,9 +1,16 @@
 <template>
-  <div><h1>FILMS</h1></div>
+  <div>
+    <films-content />
+  </div>
 </template>
 
 <script>
-export default {};
+import FilmsContent from "@/components/FilmsContent";
+export default {
+  components: {
+    FilmsContent,
+  },
+};
 </script>
 
 <style>
