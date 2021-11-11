@@ -5,6 +5,7 @@
         <p>
           Название фильма
           <input
+            v-model="itemRu.nameFilm"
             class="film__title-input"
             type="text"
             placeholder="Название фильма"
@@ -32,7 +33,7 @@
         /></label>
 
         <button class="film__add-img">Загрузить</button>
-        <button class="film__remove">Удалить</button>
+        <button @click="deleteImg()" class="film__remove">Удалить</button>
       </div>
       <div class="film__gallery-img">
         <span>Галерея картинок</span>
@@ -91,6 +92,11 @@ export default {
       fileUrl: null,
     };
   },
+  props: {
+    itemRu: {
+      type: Object,
+    },
+  },
   computed: {
     imageSrc() {
       if (this.fileUrl) {
@@ -105,6 +111,9 @@ export default {
       this.galleryImg.push({
         image: "",
       });
+    },
+    deleteImg() {
+      (this.fileUrl = null), (this.file = null);
     },
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -179,7 +188,7 @@ export default {
   &__remove {
     margin: 0px 20px;
     border-radius: 7px;
-    width: 100px;
+    width: 120px;
   }
 
   &__gallery-img {

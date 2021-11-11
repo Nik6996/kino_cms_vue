@@ -2,36 +2,15 @@
   <div>
     <div class="film">
       <div class="film__lang">
-        <button class="film__ukr">
-          <label for="1">Украинский</label>
-          <input
-            class="radio1"
-            type="radio"
-            id="1"
-            name="contact"
-            value="1"
-            checked
-            v-model="ukr"
-          />
-        </button>
-        <button class="film__rus">
-          <label for="2">Русский</label>
-
-          <input
-            class="radio2"
-            type="radio"
-            id="2"
-            name="contact"
-            value="2"
-            v-model="rus"
-          />
-        </button>
+        <button @click="ukrLearn()" class="film__ukr">Украинский</button>
+        <button @click="rusLearn()" class="film__rus">Русский</button>
       </div>
     </div>
-    <div><film-pages-rus /></div>
+    <div v-if="this.ukr == true"><film-pages-ua :itemUa="items.itemUa" /></div>
+    <div v-else><film-pages-rus :itemRu="items.itemRu" /></div>
 
     <div class="film__btns">
-      <button @click="$router.push('/films')">Сохранить</button>
+      <button @click="save(), $router.push('/films')">Сохранить</button>
       <button class="film__return">Вернуть базовую версию</button>
     </div>
   </div>
@@ -39,15 +18,63 @@
 
 <script>
 import FilmPagesRus from "@/components/FilmPagesRus.vue";
+import FilmPagesUa from "@/components/FilmPagesUa.vue";
 export default {
   data() {
     return {
-      ukr: "",
-      rus: "",
+      items: {
+        itemUa: {
+          nameFilm: "",
+          descriptionFilm: "",
+          mainImg: "",
+          mainImgUrl: "",
+          galleryImg: null,
+          refTrailer: "",
+          typeFilm: [],
+          seoUrl: "",
+          seoTitle: "",
+          seoKeywords: "",
+          seoDescription: "",
+        },
+        itemRu: {
+          nameFilm: "",
+          descriptionFilm: "",
+          mainImg: "",
+          mainImgUrl: "",
+          galleryImg: null,
+          refTrailer: "",
+          typeFilm: [],
+          seoUrl: "",
+          seoTitle: "",
+          seoKeywords: "",
+          seoDescription: "",
+        },
+        id: null,
+      },
+
+      ukr: true,
+      rus: false,
     };
+  },
+  created: function () {
+    this.items.id = new Date().valueOf();
   },
   components: {
     FilmPagesRus,
+    FilmPagesUa,
+  },
+  methods: {
+    save() {
+      this.$store.dispatch("film/saveFilm", this.items);
+    },
+    ukrLearn() {
+      this.ukr = true;
+      this.rus = false;
+    },
+    rusLearn() {
+      this.rus = true;
+      this.ukr = false;
+    },
   },
 };
 </script>

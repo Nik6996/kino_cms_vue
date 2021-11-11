@@ -2,7 +2,7 @@
   <div>
     <div class="films">
       <div class="films__title"><p>Список фильмов текущих</p></div>
-      <div class="films__list"></div>
+      <div class="films__list"><preview-film /></div>
       <button @click="$router.push('/createFilm')" class="films__btn">
         Добавить
       </button>
@@ -11,7 +11,12 @@
 </template>
 
 <script>
-export default {};
+import PreviewFilm from "@/components/PreviewFilm.vue";
+export default {
+  components: {
+    PreviewFilm,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -24,6 +29,7 @@ export default {};
   }
   &__list {
     min-height: 200px;
+    display: flex;
   }
   &__btn {
     margin: 0 auto;

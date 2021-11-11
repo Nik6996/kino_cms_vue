@@ -22,6 +22,7 @@ export default {
       fileUrl: null,
     };
   },
+
   computed: {
     imageSrc() {
       if (this.fileUrl) {
@@ -31,6 +32,7 @@ export default {
       }
     },
   },
+
   methods: {
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -41,9 +43,10 @@ export default {
 
       const file = this.$refs.ImgInput.files[0];
       const reader = new FileReader();
-
+      this.$attrs.modelValue.image = file;
       reader.onload = (ev) => {
         this.file = file;
+        this.file.imgId = new Date().valueOf();
         this.fileUrl = ev.currentTarget.result;
       };
 
