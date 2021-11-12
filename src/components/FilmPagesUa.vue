@@ -48,9 +48,6 @@
 
           <button @click="addImageGallery">Додати</button>
         </div>
-        <div @click="saveImgGallary" class="save-img">
-          <button>Сохранить</button>
-        </div>
       </div>
       <div class="film__ref-trailer">
         <span>Посилання на трейлер </span>

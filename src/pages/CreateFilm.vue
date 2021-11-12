@@ -6,7 +6,9 @@
         <button @click="rusLearn()" class="film__rus">Русский</button>
       </div>
     </div>
-    <div v-if="this.ukr == true"><film-pages-ua :itemUa="items.itemUa" /></div>
+    <div v-if="this.ukr == true">
+      <film-pages-ua ref="saveGallary" :itemUa="items.itemUa" />
+    </div>
     <div v-else><film-pages-rus :itemRu="items.itemRu" /></div>
 
     <div class="film__btns">
@@ -63,10 +65,13 @@ export default {
     FilmPagesRus,
     FilmPagesUa,
   },
+
   methods: {
     save() {
+      this.$refs.saveGallary.saveImgGallary();
       this.$store.dispatch("film/saveFilm", this.items);
     },
+
     ukrLearn() {
       this.ukr = true;
       this.rus = false;
@@ -108,13 +113,5 @@ export default {
   &__return {
     margin-left: 50px;
   }
-}
-.radio1 {
-  //   opacity: 0;
-  //   visibility: hidden;
-}
-.radio2 {
-  //   opacity: 0;
-  //   visibility: hidden;
 }
 </style>

@@ -16,6 +16,12 @@ export default {
   components: {
     PreviewFilm,
   },
+
+  methods: {
+    reloadPage() {
+      window.location.reload();
+    },
+  },
 };
 </script>
 

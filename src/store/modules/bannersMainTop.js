@@ -5,17 +5,18 @@ import { ref, set, get, } from "firebase/database";
 import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 
-const default_interval = 5;
+const default_interval = "5c";
 const BANNERS_DATABASE_PATH = 'bannersMainTop';
+const default_toggle = "true";
 
 export const bannersMainTop = {
   namespaced: true,
 
   state: () => ({
 
-
     items: [],
     interval: default_interval,
+    toggle: default_toggle,
     error: null,
     isLoading: true,
 
@@ -27,6 +28,9 @@ export const bannersMainTop = {
     interval(state) {
       return state.interval;
     },
+    toggle(state) {
+      return state.toggle;
+    },
     isLoading(state) {
       return state.isLoading;
     },
@@ -37,7 +41,7 @@ export const bannersMainTop = {
   },
 
   actions: {
-    async save({ commit, state }, { items, interval }) {
+    async save({ commit, state }, { items, interval, toggle }) {
       commit('setError', null);
       commit('setIsLoading', true);
 
@@ -114,6 +118,10 @@ export const bannersMainTop = {
         const intervalRef = ref(database, `${BANNERS_DATABASE_PATH}/interval`);
         set(intervalRef, interval);
 
+        const toggleRef = ref(database, `${BANNERS_DATABASE_PATH}/toggle`);
+        set(toggleRef, toggle);
+
+        commit('setToggle', toggle)
         commit('setItems', items);
         commit('setInterval', interval);
 
@@ -146,6 +154,13 @@ export const bannersMainTop = {
 
         if (intervalRecord.exists()) {
           commit('setInterval', intervalRecord.val())
+        };
+
+        const toggleRef = ref(database, `${BANNERS_DATABASE_PATH}/toggle`);
+        const toggleRecord = await get(toggleRef);
+
+        if (toggleRecord.exists()) {
+          commit('setToggle', toggleRecord.val())
         }
 
       } catch (error) {
@@ -161,6 +176,9 @@ export const bannersMainTop = {
 
     setInterval(state, interval) {
       state.interval = interval;
+    },
+    setToggle(state, toggle) {
+      state.toggle = toggle
     },
     setItems(state, items) {
       state.items = items

@@ -1,9 +1,23 @@
 <template>
   <div>
+    <div v-if="isLoading" class="overlay"></div>
     <div class="top-banner-title">На главной верх</div>
     <div class="top-banner">
-      <div v-if="isLoading" class="top-banner__overlay"></div>
-      <div class="top-banner__size"><p>Размер: 1000x190</p></div>
+      <div class="top-banner__size">
+        <p>Размер: 1000x190</p>
+        <div class="top-banner__btn-slider">
+          <label class="switch">
+            <input
+              v-model="formData.toggle"
+              true-value="true"
+              false-value="false"
+              type="checkbox"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
       <div class="top-banner__banners">
         <div class="top-banner__list">
           <div v-for="(banner, index) in formData.items" :key="index">
@@ -44,7 +58,8 @@ export default {
     return {
       formData: {
         items: [],
-        interval: null,
+        interval: "5c",
+        toggle: true,
       },
     };
   },
@@ -55,6 +70,7 @@ export default {
       isLoading: "bannersMainTop/isLoading",
       items: "bannersMainTop/items",
       interval: "bannersMainTop/interval",
+      toggle: "bannersMainTop/toggle",
     }),
   },
 
@@ -67,6 +83,11 @@ export default {
     interval: {
       handler(interval) {
         this.formData.interval = interval;
+      },
+    },
+    toggle: {
+      handler(toggle) {
+        this.formData.toggle = toggle;
       },
     },
   },
@@ -111,17 +132,12 @@ export default {
   border-radius: 20px;
   &__size {
     margin: 30px 0px 0px 20px;
+    display: flex;
+    justify-content: space-between;
   }
 
-  &__overlay {
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(32, 31, 31, 0.733);
-    border-radius: 20px;
+  &__btn-slider {
+    margin: 0px 30px;
   }
 
   &__banners {
@@ -144,6 +160,15 @@ export default {
     margin: 0px 0px 0px 50px;
   }
 }
+.overlay {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3000px;
+  background: rgba(32, 31, 31, 0.733);
+}
 .create-banner {
   position: relative;
   top: 20px;
@@ -155,5 +180,47 @@ export default {
   width: 140px;
   height: 40px;
   border-radius: 7px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  input:checked + .slider {
+    background-color: #01dd01;
+  }
+}
+.slider {
+  border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
 }
 </style>
