@@ -31,6 +31,7 @@ export default {
           mainImg: "",
           mainImgUrl: "",
           galleryImg: null,
+          galleryImgUrl: [],
           refTrailer: "",
           typeFilm: [],
           seoUrl: "",
@@ -79,6 +80,7 @@ export default {
     rusLearn() {
       this.rus = true;
       this.ukr = false;
+      //this.$store.dispatch("film/saveFilm", this.items);
     },
   },
 };

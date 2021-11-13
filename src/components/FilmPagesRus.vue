@@ -15,13 +15,14 @@
       <div class="film__description">
         <p>Описание</p>
         <textarea
+          v-model="itemRu.descriptionFilm"
           class="film__description-aria"
           type="text-aria"
           placeholder="Текст"
         />
       </div>
       <div class="film__main-img">
-        <span>Главная картинка</span>
+        <span>Главное изображение</span>
         <label class="film__img-main"
           ><input
             ref="ImgInput"
@@ -36,9 +37,9 @@
         <button @click="deleteImg()" class="film__remove">Удалить</button>
       </div>
       <div class="film__gallery-img">
-        <span>Галерея картинок</span>
+        <span>Галерея изображений</span>
         <div class="film__gallery">
-          <div class="film__size-gallery">Размер: 1000x190</div>
+          <div class="film__size-gallery">Розмер: 1000x190</div>
           <div class="film__gallery-list">
             <div v-for="(img, index) in galleryImg" :key="index">
               <img-gallary-film v-model="galleryImg[index]" />
@@ -50,24 +51,53 @@
       </div>
       <div class="film__ref-trailer">
         <span>Ссылка на трейлер </span>
-        <input type="text" placeholder="Ссылка на трейлер" />
+        <input
+          v-model="itemRu.refTrailer"
+          type="text"
+          placeholder="Ссылка на трейлер"
+        />
       </div>
       <div class="film__type-film">
-        <span>Тип кино</span>
-        <p><input type="checkbox" checked /> 3D</p>
-        <p><input type="checkbox" checked /> 2D</p>
-        <p><input type="checkbox" checked /> IMAX</p>
+        <span>Тип кіно</span>
+        <p>
+          <input v-model="itemRu.typeFilm" type="checkbox" value="3D" checked />
+          3D
+        </p>
+        <p>
+          <input v-model="itemRu.typeFilm" type="checkbox" value="2D" checked />
+          2D
+        </p>
+        <p>
+          <input
+            v-model="itemRu.typeFilm"
+            type="checkbox"
+            value="IMAX"
+            checked
+          />
+          IMAX
+        </p>
       </div>
       <div class="film__seo-block">
         <span>SEO блок:</span>
         <div class="film__seo-input">
-          <p>URL: <input type="text" placeholder="URL" /></p>
-          <p>Title: <input type="text" placeholder="Title" /></p>
+          <p>
+            URL: <input v-model="itemRu.seoUrl" type="text" placeholder="URL" />
+          </p>
+          <p>
+            Title:
+            <input v-model="itemRu.seoTitle" type="text" placeholder="Title" />
+          </p>
           <p class="keywords">
-            Keywords: <input type="text" placeholder="word" />
+            Keywords:
+            <input
+              v-model="itemRu.seoKeywords"
+              type="text"
+              placeholder="word"
+            />
           </p>
           <p class="description">
             Description:<textarea
+              v-model="itemRu.seoDescription"
               class="description-textarea"
               placeholder="Description"
             ></textarea>
@@ -101,15 +131,30 @@ export default {
     imageSrc() {
       if (this.fileUrl) {
         return this.fileUrl;
+      }
+      if (this.itemRu.mainImgUrl) {
+        return this.itemRu.mainImgUrl;
       } else {
         return defaultImg;
       }
     },
   },
+  watch: {
+    file: {
+      handler(file) {
+        this.itemRu.mainImg = file;
+      },
+    },
+  },
+
   methods: {
+    saveImgGallary() {
+      this.itemRu.galleryImg = this.galleryImg;
+    },
     addImageGallery() {
       this.galleryImg.push({
         image: "",
+        order: "",
       });
     },
     deleteImg() {
@@ -124,9 +169,10 @@ export default {
 
       const file = this.$refs.ImgInput.files[0];
       const reader = new FileReader();
-
+      this.itemRu.mainImg = file;
       reader.onload = (ev) => {
         this.file = file;
+        this.file.imgId = new Date().valueOf();
         this.fileUrl = ev.currentTarget.result;
       };
 
@@ -271,5 +317,9 @@ export default {
 .keywords {
   position: relative;
   left: -38px;
+}
+.save-img {
+  display: flex;
+  justify-content: center;
 }
 </style>
