@@ -42,12 +42,12 @@ export const bannersMainTop = {
 
   actions: {
     async save({ commit, state }, { items, interval, toggle }) {
+      console.log(items)
       commit('setError', null);
       commit('setIsLoading', true);
 
       async function updateImg(item, index) {
         const img = item.file
-        // delete item.file
         const storageRef = refStorage(storage, `${BANNERS_DATABASE_PATH}/${item.file.imgId}`);
         await uploadBytes(storageRef, img);
 
@@ -58,10 +58,6 @@ export const bannersMainTop = {
           order: index,
           image: url
         })
-
-
-
-
 
       }
 
@@ -95,7 +91,7 @@ export const bannersMainTop = {
           });
         } else {
           items.forEach((item, index) => {
-
+            console.log(item)
             if (item.file) {
               // TODO: update file
               updateImg(item, index);

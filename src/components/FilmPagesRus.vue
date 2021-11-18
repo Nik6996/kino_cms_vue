@@ -117,9 +117,10 @@ export default {
   },
   data() {
     return {
-      galleryImg: [],
+      galleryImg: this.itemRu.galleryImg,
       file: null,
       fileUrl: null,
+      fileLocal: this.itemRu.fileLocal,
     };
   },
   props: {
@@ -132,8 +133,8 @@ export default {
       if (this.fileUrl) {
         return this.fileUrl;
       }
-      if (this.itemRu.mainImgUrl) {
-        return this.itemRu.mainImgUrl;
+      if (this.itemRu.fileLocal) {
+        return this.itemRu.fileLocal;
       } else {
         return defaultImg;
       }
@@ -158,7 +159,7 @@ export default {
       });
     },
     deleteImg() {
-      (this.fileUrl = null), (this.file = null);
+      (this.fileUrl = null), (this.file = null), (this.itemRu.fileLocal = "");
     },
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -174,6 +175,7 @@ export default {
         this.file = file;
         this.file.imgId = new Date().valueOf();
         this.fileUrl = ev.currentTarget.result;
+        this.itemRu.fileLocal = ev.currentTarget.result;
       };
 
       reader.readAsDataURL(file);

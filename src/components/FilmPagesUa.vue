@@ -110,6 +110,7 @@
 
 <script>
 import ImgGallaryFilm from "@/components/ImgGallaryFilm.vue";
+// import { mapGetters } from "vuex";
 const defaultImg = require("@/assets/img/prevue.png");
 export default {
   components: {
@@ -117,9 +118,10 @@ export default {
   },
   data() {
     return {
-      galleryImg: [],
+      galleryImg: this.itemUa.galleryImg,
       file: null,
       fileUrl: null,
+      fileLocal: this.itemUa.fileLocal,
     };
   },
   props: {
@@ -127,13 +129,18 @@ export default {
       type: Object,
     },
   },
+
   computed: {
+    // ...mapGetters({
+    //   file: "film/getLocalImg",
+    // }),
+
     imageSrc() {
       if (this.fileUrl) {
         return this.fileUrl;
       }
-      if (this.itemUa.mainImgUrl) {
-        return this.itemUa.mainImgUrl;
+      if (this.itemUa.fileLocal) {
+        return this.itemUa.fileLocal;
       } else {
         return defaultImg;
       }
@@ -148,6 +155,9 @@ export default {
   },
 
   methods: {
+    // saveUrl() {
+    //   this.$store.dispatch("film/saveLocalImg", this.file);
+    // },
     saveImgGallary() {
       this.itemUa.galleryImg = this.galleryImg;
     },
@@ -158,7 +168,7 @@ export default {
       });
     },
     deleteImg() {
-      (this.fileUrl = null), (this.file = null);
+      (this.fileUrl = null), (this.file = null), (this.itemUa.fileLocal = "");
     },
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -174,6 +184,7 @@ export default {
         this.file = file;
         this.file.imgId = new Date().valueOf();
         this.fileUrl = ev.currentTarget.result;
+        this.itemUa.fileLocal = ev.currentTarget.result;
       };
 
       reader.readAsDataURL(file);

@@ -1,24 +1,27 @@
 <template>
   <div>
+    <div v-if="isLoading" class="overlay"></div>
     <div class="film">
       <div class="film__lang">
         <button @click="ukrLearn()" class="film__ukr">Украинский</button>
         <button @click="rusLearn()" class="film__rus">Русский</button>
       </div>
     </div>
+
     <div v-if="this.ukr == true">
       <film-pages-ua ref="saveGallary" :itemUa="items.itemUa" />
     </div>
     <div v-else><film-pages-rus :itemRu="items.itemRu" /></div>
 
     <div class="film__btns">
-      <button @click="save(), $router.push('/films')">Сохранить</button>
+      <button @click="save()">Сохранить</button>
       <button class="film__return">Вернуть базовую версию</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import FilmPagesRus from "@/components/FilmPagesRus.vue";
 import FilmPagesUa from "@/components/FilmPagesUa.vue";
 export default {
@@ -30,7 +33,7 @@ export default {
           descriptionFilm: "",
           mainImg: "",
           mainImgUrl: "",
-          galleryImg: null,
+          galleryImg: [],
           galleryImgUrl: [],
           refTrailer: "",
           typeFilm: [],
@@ -38,19 +41,22 @@ export default {
           seoTitle: "",
           seoKeywords: "",
           seoDescription: "",
+          fileLocal: "",
         },
         itemRu: {
           nameFilm: "",
           descriptionFilm: "",
           mainImg: "",
           mainImgUrl: "",
-          galleryImg: null,
+          galleryImg: [],
+          galleryImgUrl: [],
           refTrailer: "",
           typeFilm: [],
           seoUrl: "",
           seoTitle: "",
           seoKeywords: "",
           seoDescription: "",
+          fileLocal: "",
         },
         id: null,
       },
@@ -59,18 +65,28 @@ export default {
       rus: false,
     };
   },
-  created: function () {
-    this.items.id = new Date().valueOf();
+  computed: {
+    ...mapGetters({
+      isLoading: "film/isLoading",
+    }),
   },
+
   components: {
     FilmPagesRus,
     FilmPagesUa,
   },
 
   methods: {
-    save() {
-      this.$refs.saveGallary.saveImgGallary();
-      this.$store.dispatch("film/saveFilm", this.items);
+    async save() {
+      this.items.id = new Date().valueOf();
+
+      try {
+        await this.$store.dispatch("film/saveFilm", this.items);
+        this.$router.push("/films");
+      } catch (error) {
+        console.log(error);
+      }
+      // this.$refs.saveGallary.saveImgGallary();
     },
 
     ukrLearn() {
@@ -80,7 +96,7 @@ export default {
     rusLearn() {
       this.rus = true;
       this.ukr = false;
-      //this.$store.dispatch("film/saveFilm", this.items);
+      //this.$store.dispatch("film/saveFilmStore", this.items);
     },
   },
 };
@@ -115,5 +131,14 @@ export default {
   &__return {
     margin-left: 50px;
   }
+}
+.overlay {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3000px;
+  background: rgba(95, 93, 93, 0.733);
 }
 </style>

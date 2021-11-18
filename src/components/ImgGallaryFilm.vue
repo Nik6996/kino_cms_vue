@@ -33,6 +33,11 @@ export default {
     },
   },
 
+  created() {
+    this.file = this.$attrs.modelValue.image || null;
+    this.displayFileImage();
+  },
+
   methods: {
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -41,16 +46,25 @@ export default {
         return;
       }
 
-      const file = this.$refs.ImgInput.files[0];
+      this.file = this.$refs.ImgInput.files[0];
+      this.file.imgId = new Date().valueOf();
+      this.$attrs.modelValue.image = this.file;
+
+      this.displayFileImage();
+    },
+
+    displayFileImage() {
+      if (!this.file) {
+        this.fileUrl = null;
+        return;
+      }
       const reader = new FileReader();
-      this.$attrs.modelValue.image = file;
+
       reader.onload = (ev) => {
-        this.file = file;
-        this.file.imgId = new Date().valueOf();
         this.fileUrl = ev.currentTarget.result;
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(this.file);
     },
   },
 };

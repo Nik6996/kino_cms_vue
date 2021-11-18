@@ -1,6 +1,6 @@
 <template>
   <div>
-    <films-content />
+    <router-view></router-view>
   </div>
 </template>
 

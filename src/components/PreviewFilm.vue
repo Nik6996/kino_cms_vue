@@ -1,22 +1,47 @@
 <template>
   <div>
-    <div class="cart">
-      <div class="cart__img">
-        <img src="@/assets/img/prevue.png" alt="" />
+    <div @click="deleteCart" class="cart__delete"><span>X</span></div>
+    <router-link
+      class="button"
+      :to="'/films/edit/' + this.$attrs.modelValue.id"
+    >
+      <div class="cart">
+        <div class="cart__img">
+          <img v-if="previewImg" v-bind:src="previewImg" alt="" />
+          <img v-else src="@/assets/img/prevue.png" alt="" />
+        </div>
+        <div class="cart__name">
+          <span v-if="nameFilm">{{ nameFilm }}</span>
+          <span v-else>Название фильма</span>
+        </div>
       </div>
-      <div class="cart__name"><span>Название фильма</span></div>
-    </div>
+    </router-link>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      previewImg: this.$attrs.modelValue.itemUa.mainImgUrl,
+      nameFilm: this.$attrs.modelValue.itemUa.nameFilm,
+    };
+  },
+  methods: {
+    deleteCart() {
+      //console.log(this.$attrs.modelValue.id);
+      this.$store.dispatch("film/deleteFilm", this.$attrs.modelValue.id);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .cart {
   width: 200px;
-  height: 300px;
+  height: 220px;
+
+  margin: 30px 20px;
   &__img {
     cursor: pointer;
     img {
@@ -26,6 +51,15 @@ export default {};
   }
 
   &__name {
+    color: black;
+  }
+  &__delete {
+    cursor: pointer;
+    display: flex;
+    justify-content: end;
+    position: relative;
+    top: 30px;
+    right: 30px;
   }
 }
 </style>
