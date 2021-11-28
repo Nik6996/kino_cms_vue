@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <div class="film">
@@ -8,7 +9,7 @@
             v-model="itemRu.nameFilm"
             class="film__title-input"
             type="text"
-            placeholder="Название фильма"
+            placeholder="Назвние фильма"
           />
         </p>
       </div>
@@ -33,20 +34,33 @@
           <img v-bind:src="imageSrc" alt=""
         /></label>
 
-        <button class="film__add-img">Загрузить</button>
         <button @click="deleteImg()" class="film__remove">Удалить</button>
       </div>
       <div class="film__gallery-img">
         <span>Галерея изображений</span>
         <div class="film__gallery">
-          <div class="film__size-gallery">Розмер: 1000x190</div>
+          <div class="film__size-gallery">Размер: 1000x190</div>
+
           <div class="film__gallery-list">
-            <div v-for="(img, index) in galleryImg" :key="index">
-              <img-gallary-film v-model="galleryImg[index]" />
+            <div v-for="(img, index) in galleryImgUrl" :key="img.id">
+              <img-gallary-film
+                v-model="galleryImgUrl[index]"
+                @reload="removeImageOld(index, img.id)"
+                ref="imgGallaryFilm"
+              />
+            </div>
+            <div v-for="(img, index) in galleryImg" :key="img.key">
+              <img-gallary-film
+                v-model="galleryImg[index]"
+                @reload="removeImageNew(index)"
+                ref="imgGallaryFilm"
+              />
             </div>
           </div>
 
-          <button @click="addImageGallery">Добавить</button>
+          <button :disabled="btnControl" @click="addImageGallery">
+            Добавить
+          </button>
         </div>
       </div>
       <div class="film__ref-trailer">
@@ -58,9 +72,9 @@
         />
       </div>
       <div class="film__type-film">
-        <span>Тип кіно</span>
+        <span>Тип кино</span>
         <p>
-          <input v-model="itemRu.typeFilm" type="checkbox" value="3D" checked />
+          <input v-model="itemRu.typeFilm" type="checkbox" value="3D" />
           3D
         </p>
         <p>
@@ -68,12 +82,7 @@
           2D
         </p>
         <p>
-          <input
-            v-model="itemRu.typeFilm"
-            type="checkbox"
-            value="IMAX"
-            checked
-          />
+          <input v-model="itemRu.typeFilm" type="checkbox" value="IMAX" />
           IMAX
         </p>
       </div>
@@ -118,9 +127,12 @@ export default {
   data() {
     return {
       galleryImg: this.itemRu.galleryImg,
+      galleryImgUrl: null,
       file: null,
       fileUrl: null,
       fileLocal: this.itemRu.fileLocal,
+      btnControl: false,
+      uniqueKey: 0,
     };
   },
   props: {
@@ -128,6 +140,7 @@ export default {
       type: Object,
     },
   },
+
   computed: {
     imageSrc() {
       if (this.fileUrl) {
@@ -135,6 +148,9 @@ export default {
       }
       if (this.itemRu.fileLocal) {
         return this.itemRu.fileLocal;
+      }
+      if (this.itemRu.mainImgUrl.url) {
+        return this.itemRu.mainImgUrl.url;
       } else {
         return defaultImg;
       }
@@ -147,19 +163,48 @@ export default {
       },
     },
   },
+  created() {
+    this.galleryImgUrl = this.itemRu.galleryImgUrl;
+  },
 
   methods: {
-    saveImgGallary() {
-      this.itemRu.galleryImg = this.galleryImg;
+    removeImageNew(index) {
+      if (this.galleryImg.length >= 1) {
+        this.galleryImg.splice(index, 1);
+      }
     },
-    addImageGallery() {
-      this.galleryImg.push({
+    removeImageOld(index, id) {
+      if (this.galleryImgUrl.length >= 1) {
+        console.log(id);
+        this.$emit("imgIdRemove", id);
+
+        this.galleryImgUrl.splice(index, 1);
+      }
+    },
+
+    loadImg() {
+      this.galleryImgUrl = this.itemRu.galleryImgUrl;
+    },
+
+    async addImageGallery() {
+      await this.galleryImg.push({
         image: "",
-        order: "",
+      });
+      console.log(this.galleryImg);
+      this.itemRu.galleryImg = this.galleryImg;
+      this.$refs.imgGallaryFilm.addImg();
+      this.galleryImg.forEach((img) => {
+        if (!img.image) {
+          this.btnControl = true;
+        }
       });
     },
     deleteImg() {
-      (this.fileUrl = null), (this.file = null), (this.itemRu.fileLocal = "");
+      (this.fileUrl = null),
+        (this.file = null),
+        (this.itemRu.fileLocal = ""),
+        (this.itemRu.mainImgUrl.imgId = "");
+      this.itemRu.mainImgUrl.url = "";
     },
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -237,6 +282,7 @@ export default {
     margin: 0px 20px;
     border-radius: 7px;
     width: 120px;
+    background-color: rgb(226, 97, 97);
   }
 
   &__gallery-img {

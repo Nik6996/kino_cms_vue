@@ -12,6 +12,18 @@
       <button class="films__btn">
         <router-link class="button" to="/films/create">Добавить</router-link>
       </button>
+      <!-- <div class="films__title">
+        <p>Список фильмов которые покажут скоро</p>
+      </div>
+      <div class="films__list">
+        <div v-for="(film, index) in films" :key="index">
+          <preview-film v-model="films[index]" />
+        </div>
+      </div>
+
+      <button class="films__btn">
+        <router-link class="button" to="/films/create">Добавить</router-link>
+      </button> -->
     </div>
   </div>
 </template>

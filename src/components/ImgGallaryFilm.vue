@@ -1,6 +1,7 @@
 <template>
   <div>
-    <label class="img-main">
+    <div class="delete-img"><span @click="deleteImg()">X</span></div>
+    <label id="fileUpload" class="img-main">
       <input
         accept=".png, .jpg, .jpeg"
         type="file"
@@ -20,6 +21,8 @@ export default {
     return {
       file: null,
       fileUrl: null,
+      fileStorage: null,
+      imgId: null,
     };
   },
 
@@ -27,6 +30,9 @@ export default {
     imageSrc() {
       if (this.fileUrl) {
         return this.fileUrl;
+      }
+      if (this.fileStorage) {
+        return this.fileStorage;
       } else {
         return defaultImg;
       }
@@ -35,19 +41,42 @@ export default {
 
   created() {
     this.file = this.$attrs.modelValue.image || null;
+    this.fileStorage = this.$attrs.modelValue.imageStorage || null;
+    this.imgId = this.$attrs.modelValue.id || null;
     this.displayFileImage();
+  },
+  mounted() {
+    if (this.fileStorage) {
+      document.getElementById("fileUpload").id = null;
+    }
   },
 
   methods: {
-    previewImg() {
+    deleteImg() {
+      this.$emit("reload");
+    },
+
+    async addImg() {
+      document.getElementById("fileUpload").click();
+      document.getElementById("fileUpload").id = null;
+    },
+
+    async previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
         this.file = null;
         this.fileUrl = null;
+        this.fileStorage = null;
+
         return;
       }
 
       this.file = this.$refs.ImgInput.files[0];
-      this.file.imgId = new Date().valueOf();
+      if (this.imgId) {
+        this.file.imgId = this.imgId;
+      } else {
+        this.file.imgId = new Date().valueOf();
+      }
+
       this.$attrs.modelValue.image = this.file;
 
       this.displayFileImage();
@@ -56,14 +85,19 @@ export default {
     displayFileImage() {
       if (!this.file) {
         this.fileUrl = null;
+
         return;
       }
+      if (this.file) {
+        this.fileStorage = null;
+        this.$parent.btnControl = false;
+      }
+
       const reader = new FileReader();
 
       reader.onload = (ev) => {
         this.fileUrl = ev.currentTarget.result;
       };
-
       reader.readAsDataURL(this.file);
     },
   },
@@ -85,5 +119,13 @@ export default {
 }
 .img {
   display: none;
+}
+
+.delete-img {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+  right: 10px;
 }
 </style>

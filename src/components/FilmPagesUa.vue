@@ -33,20 +33,33 @@
           <img v-bind:src="imageSrc" alt=""
         /></label>
 
-        <button class="film__add-img">Завантажити</button>
         <button @click="deleteImg()" class="film__remove">Видалити</button>
       </div>
       <div class="film__gallery-img">
         <span>Галерея зображень</span>
         <div class="film__gallery">
           <div class="film__size-gallery">Розмір: 1000x190</div>
+
           <div class="film__gallery-list">
-            <div v-for="(img, index) in galleryImg" :key="index">
-              <img-gallary-film v-model="galleryImg[index]" />
+            <div v-for="(img, index) in galleryImgUrl" :key="img.id">
+              <img-gallary-film
+                v-model="galleryImgUrl[index]"
+                @reload="removeImageOld(index, img.id)"
+                ref="imgGallaryFilm"
+              />
+            </div>
+            <div v-for="(img, index) in galleryImg" :key="img.key">
+              <img-gallary-film
+                v-model="galleryImg[index]"
+                @reload="removeImageNew(index)"
+                ref="imgGallaryFilm"
+              />
             </div>
           </div>
 
-          <button @click="addImageGallery">Додати</button>
+          <button :disabled="btnControl" @click="addImageGallery">
+            Додати
+          </button>
         </div>
       </div>
       <div class="film__ref-trailer">
@@ -60,7 +73,7 @@
       <div class="film__type-film">
         <span>Тип кіно</span>
         <p>
-          <input v-model="itemUa.typeFilm" type="checkbox" value="3D" checked />
+          <input v-model="itemUa.typeFilm" type="checkbox" value="3D" />
           3D
         </p>
         <p>
@@ -68,12 +81,7 @@
           2D
         </p>
         <p>
-          <input
-            v-model="itemUa.typeFilm"
-            type="checkbox"
-            value="IMAX"
-            checked
-          />
+          <input v-model="itemUa.typeFilm" type="checkbox" value="IMAX" />
           IMAX
         </p>
       </div>
@@ -110,7 +118,6 @@
 
 <script>
 import ImgGallaryFilm from "@/components/ImgGallaryFilm.vue";
-// import { mapGetters } from "vuex";
 const defaultImg = require("@/assets/img/prevue.png");
 export default {
   components: {
@@ -119,9 +126,12 @@ export default {
   data() {
     return {
       galleryImg: this.itemUa.galleryImg,
+      galleryImgUrl: null,
       file: null,
       fileUrl: null,
       fileLocal: this.itemUa.fileLocal,
+      btnControl: false,
+      uniqueKey: 0,
     };
   },
   props: {
@@ -131,16 +141,15 @@ export default {
   },
 
   computed: {
-    // ...mapGetters({
-    //   file: "film/getLocalImg",
-    // }),
-
     imageSrc() {
       if (this.fileUrl) {
         return this.fileUrl;
       }
       if (this.itemUa.fileLocal) {
         return this.itemUa.fileLocal;
+      }
+      if (this.itemUa.mainImgUrl.url) {
+        return this.itemUa.mainImgUrl.url;
       } else {
         return defaultImg;
       }
@@ -153,22 +162,49 @@ export default {
       },
     },
   },
+  created() {
+    this.galleryImgUrl = this.itemUa.galleryImgUrl;
+  },
 
   methods: {
-    // saveUrl() {
-    //   this.$store.dispatch("film/saveLocalImg", this.file);
-    // },
-    saveImgGallary() {
-      this.itemUa.galleryImg = this.galleryImg;
+    removeImageNew(index) {
+      if (this.galleryImg.length >= 1) {
+        this.galleryImg.splice(index, 1);
+        if (this.galleryImg.length <= index) {
+          this.btnControl = false;
+        }
+      }
     },
-    addImageGallery() {
-      this.galleryImg.push({
+    removeImageOld(index, id) {
+      if (this.galleryImgUrl.length >= 1) {
+        this.$emit("imgIdRemoveUa", id);
+        this.galleryImgUrl.splice(index, 1);
+      }
+    },
+    loadImg() {
+      this.galleryImgUrl = this.itemUa.galleryImgUrl;
+    },
+
+    async addImageGallery() {
+      await this.galleryImg.push({
         image: "",
-        order: "",
+        key: this.uniqueKey++,
+      });
+      this.itemUa.galleryImg = this.galleryImg;
+      this.$refs.imgGallaryFilm.addImg();
+      this.galleryImg.forEach((img) => {
+        if (!img.image) {
+          this.btnControl = true;
+        }
       });
     },
+
     deleteImg() {
-      (this.fileUrl = null), (this.file = null), (this.itemUa.fileLocal = "");
+      (this.fileUrl = null),
+        (this.file = null),
+        (this.itemUa.fileLocal = ""),
+        (this.itemUa.mainImgUrl.imgId = "");
+      this.itemUa.mainImgUrl.url = "";
     },
     previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
@@ -246,6 +282,7 @@ export default {
     margin: 0px 20px;
     border-radius: 7px;
     width: 120px;
+    background-color: rgb(226, 97, 97);
   }
 
   &__gallery-img {

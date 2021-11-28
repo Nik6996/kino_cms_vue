@@ -34,8 +34,9 @@
   </div>
 </template>
 
+
 <script>
-import NewBannerStock from "./NewBannerStock.vue";
+import NewBannerStock from "@/components/NewBannerStock.vue";
 import { mapGetters } from "vuex";
 import { cloneDeep } from "lodash/fp";
 

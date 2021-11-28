@@ -23,14 +23,15 @@
 export default {
   data() {
     return {
-      previewImg: this.$attrs.modelValue.itemUa.mainImgUrl,
+      previewImg: this.$attrs.modelValue.itemUa.mainImgUrl.url,
       nameFilm: this.$attrs.modelValue.itemUa.nameFilm,
     };
   },
+
   methods: {
     deleteCart() {
-      //console.log(this.$attrs.modelValue.id);
-      this.$store.dispatch("film/deleteFilm", this.$attrs.modelValue.id);
+      //console.log(this.$attrs.modelValue);
+      this.$store.dispatch("film/deleteFilm", this.$attrs.modelValue);
     },
   },
 };

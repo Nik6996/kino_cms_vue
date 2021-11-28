@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div v-if="isLoading" class="overlay"></div>
+    <div v-if="isLoading" class="overlay">
+      <div class="overlay__img">
+        <span>Загрузка...</span>
+        <img src="@/assets/img/overlay.gif" alt="" />
+      </div>
+    </div>
     <div class="film">
       <div class="film__lang">
         <button @click="ukrLearn()" class="film__ukr">Украинский</button>
@@ -9,19 +14,32 @@
     </div>
 
     <div v-if="this.ukr == true">
-      <film-pages-ua ref="saveGallary" :itemUa="items.itemUa" />
+      <film-pages-ua
+        @imgIdRemoveUa="idRemoveUa"
+        ref="uaFilm"
+        :itemUa="items.itemUa"
+      />
     </div>
-    <div v-else><film-pages-rus :itemRu="items.itemRu" /></div>
+    <div v-else>
+      <film-pages-rus
+        @imgIdRemoveRu="idRemoveRu"
+        ref="ruFilm"
+        :itemRu="items.itemRu"
+      />
+    </div>
 
     <div class="film__btns">
       <button @click="save()">Сохранить</button>
-      <button class="film__return">Вернуть базовую версию</button>
+      <button v-if="items.id" @click="returnBaseVersion()" class="film__return">
+        Вернуть базовую версию
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+
 import FilmPagesRus from "@/components/FilmPagesRus.vue";
 import FilmPagesUa from "@/components/FilmPagesUa.vue";
 export default {
@@ -32,32 +50,41 @@ export default {
           nameFilm: "",
           descriptionFilm: "",
           mainImg: "",
-          mainImgUrl: "",
+          mainImgUrl: {
+            url: "",
+            idImg: "",
+          },
           galleryImg: [],
           galleryImgUrl: [],
           refTrailer: "",
-          typeFilm: [],
+          typeFilm: ["2D"],
           seoUrl: "",
           seoTitle: "",
           seoKeywords: "",
           seoDescription: "",
+          idImgRemove: [],
           fileLocal: "",
         },
         itemRu: {
           nameFilm: "",
           descriptionFilm: "",
           mainImg: "",
-          mainImgUrl: "",
+          mainImgUrl: {
+            url: "",
+            idImg: "",
+          },
           galleryImg: [],
           galleryImgUrl: [],
           refTrailer: "",
-          typeFilm: [],
+          typeFilm: ["2D"],
           seoUrl: "",
           seoTitle: "",
           seoKeywords: "",
           seoDescription: "",
+          idImgRemove: [],
           fileLocal: "",
         },
+
         id: null,
       },
 
@@ -68,6 +95,7 @@ export default {
   computed: {
     ...mapGetters({
       isLoading: "film/isLoading",
+      films: "film/getFilms",
     }),
   },
 
@@ -75,18 +103,48 @@ export default {
     FilmPagesRus,
     FilmPagesUa,
   },
+  async created() {
+    await this.$store.dispatch("film/loadFims");
+    if (this.$route.params.id) {
+      await this.loadFilm();
+
+      this.$refs.uaFilm.loadImg();
+    } else {
+      console.log("false");
+    }
+  },
 
   methods: {
+    idRemoveUa(id) {
+      this.items.itemUa.idImgRemove.push({ id });
+    },
+    idRemoveRu(id) {
+      this.items.itemRu.idImgRemove.push({ id });
+    },
+
+    async loadFilm() {
+      const routeId = this.$route.params.id;
+      this.films.forEach((film) => {
+        if (routeId == film.id) {
+          this.items = film;
+        }
+      });
+    },
     async save() {
-      this.items.id = new Date().valueOf();
+      if (!this.items.id) {
+        this.items.id = new Date().valueOf();
+      }
 
       try {
         await this.$store.dispatch("film/saveFilm", this.items);
+
         this.$router.push("/films");
       } catch (error) {
         console.log(error);
       }
-      // this.$refs.saveGallary.saveImgGallary();
+    },
+    returnBaseVersion() {
+      window.location.reload();
     },
 
     ukrLearn() {
@@ -96,7 +154,6 @@ export default {
     rusLearn() {
       this.rus = true;
       this.ukr = false;
-      //this.$store.dispatch("film/saveFilmStore", this.items);
     },
   },
 };
@@ -133,12 +190,25 @@ export default {
   }
 }
 .overlay {
+  display: flex;
+
+  justify-content: center;
   position: absolute;
-  z-index: 10;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
   height: 3000px;
-  background: rgba(95, 93, 93, 0.733);
+  background: rgb(233, 233, 233);
+  &__img {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    position: fixed;
+    span {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+  }
 }
 </style>
