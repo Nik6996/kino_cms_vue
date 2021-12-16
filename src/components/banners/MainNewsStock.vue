@@ -36,7 +36,7 @@
 
 
 <script>
-import NewBannerStock from "@/components/NewBannerStock.vue";
+import NewBannerStock from "@/components/banners/NewBannerStock.vue";
 import { mapGetters } from "vuex";
 import { cloneDeep } from "lodash/fp";
 

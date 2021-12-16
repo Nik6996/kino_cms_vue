@@ -6,7 +6,7 @@
           <li @click="$router.push('/statistic')" class="nav-item">
             <p>Статистика</p>
           </li>
-          <li @click="$router.push('/')" class="nav-item">
+          <li @click="$router.push('/')" active class="nav-item">
             <p>Баннера/Слайдеры</p>
           </li>
           <li @click="$router.push('/films')" class="nav-item">
@@ -46,6 +46,8 @@ export default {};
   max-width: 200px;
   margin-top: 120px;
   margin-left: 20px;
+  position: fixed;
+  height: 400px;
 }
 
 .nav-pills .nav-link {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="delete-img"><span @click="deleteImg()">X</span></div>
-    <label id="fileUpload" class="img-main">
+    <label class="img-main">
       <input
         accept=".png, .jpg, .jpeg"
         type="file"
@@ -20,85 +20,81 @@ export default {
   data() {
     return {
       file: null,
-      fileUrl: null,
-      fileStorage: null,
-      imgId: null,
+      img: null,
+      imgUrl: null,
+      id: null,
     };
   },
-
   computed: {
     imageSrc() {
-      if (this.fileUrl) {
-        return this.fileUrl;
+      if (this.img) {
+        return this.img;
       }
-      if (this.fileStorage) {
-        return this.fileStorage;
+      if (this.imgUrl) {
+        return this.imgUrl;
       } else {
         return defaultImg;
       }
     },
   },
-
   created() {
     this.file = this.$attrs.modelValue.image || null;
-    this.fileStorage = this.$attrs.modelValue.imageStorage || null;
-    this.imgId = this.$attrs.modelValue.id || null;
+    this.imgUrl = this.$attrs.modelValue.url;
+    this.id = this.$attrs.modelValue.id || null;
     this.displayFileImage();
-  },
-  mounted() {
-    if (this.fileStorage) {
-      document.getElementById("fileUpload").id = null;
-    }
   },
 
   methods: {
     deleteImg() {
-      this.$emit("reload");
-    },
-
-    async addImg() {
-      document.getElementById("fileUpload").click();
-      document.getElementById("fileUpload").id = null;
+      if (this.imgUrl) {
+        this.$emit("removeGallaryId", this.id);
+      }
+      this.$parent.gallary.forEach((item, index) => {
+        if (item.id == this.id) {
+          this.$parent.gallary.splice(index, 1);
+        }
+      });
     },
 
     async previewImg() {
       if (!this.$refs.ImgInput || !this.$refs.ImgInput.files?.length) {
         this.file = null;
-        this.fileUrl = null;
-        this.fileStorage = null;
-
+        this.img = null;
+        this.imgUrl = null;
         return;
       }
-
       this.file = this.$refs.ImgInput.files[0];
-      if (this.imgId) {
-        this.file.imgId = this.imgId;
+
+      if (this.id) {
+        //this.file.imgId = this.id;
       } else {
-        this.file.imgId = new Date().valueOf();
+        this.id = new Date().valueOf();
+        // this.file.imgId = this.id;
       }
-
       this.$attrs.modelValue.image = this.file;
-
+      this.$attrs.modelValue.id = this.id;
       this.displayFileImage();
     },
 
     displayFileImage() {
       if (!this.file) {
-        this.fileUrl = null;
-
+        this.img = null;
         return;
       }
       if (this.file) {
-        this.fileStorage = null;
-        this.$parent.btnControl = false;
+        //this.imgUrl = null;
+        // this.$parent.btnControl = false;
+
+        const reader = new FileReader();
+
+        reader.onload = (ev) => {
+          this.img = ev.currentTarget.result;
+        };
+        reader.readAsDataURL(this.file);
       }
-
-      const reader = new FileReader();
-
-      reader.onload = (ev) => {
-        this.fileUrl = ev.currentTarget.result;
-      };
-      reader.readAsDataURL(this.file);
+      // if (!this.id) {
+      //   this.id = new Date().valueOf();
+      // }
     },
   },
 };
@@ -120,7 +116,6 @@ export default {
 .img {
   display: none;
 }
-
 .delete-img {
   display: flex;
   justify-content: flex-end;

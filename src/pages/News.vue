@@ -1,11 +1,22 @@
 <template>
-  <div><h1>NEWS</h1></div>
-  <router-view></router-view>
+  <div>
+    <div class="main-news">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {};
+import NewsContent from "@/components/news/NewsContent.vue";
+export default {
+  components: {
+    NewsContent,
+  },
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.main-news {
+  margin-top: 100px;
+}
 </style>

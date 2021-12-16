@@ -7,12 +7,12 @@ import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject, } from "f
 
 
 
-const FILM_DATABASE_PATH = 'film'
-export const film = {
+const FILM_DATABASE_PATH = 'filmSoon'
+export const filmSoon = {
 	namespaced: true,
 	state: () => ({
-		films: [],
-		isLoading: true,
+		filmsSoon: [],
+		isLoading: false,
 
 
 	}),
@@ -22,7 +22,7 @@ export const film = {
 			return state.isLoading;
 		},
 		getFilms(state) {
-			return state.films
+			return state.filmsSoon
 		}
 
 	},
@@ -227,7 +227,7 @@ export const film = {
 
 
 				if (filmRecord.exists()) {
-					const films = [];
+					const filmsSoon = [];
 					filmRecord.forEach(film => {
 
 						const itemFilm = film.val()
@@ -246,9 +246,9 @@ export const film = {
 							itemFilm.itemRu.idImgRemove = []
 						}
 
-						films.push(itemFilm)
+						filmsSoon.push(itemFilm)
 					})
-					commit('setFilms', films)
+					commit('setFilms', filmsSoon)
 					commit('setIsLoading', false)
 				}
 
@@ -303,8 +303,8 @@ export const film = {
 	},
 	mutations: {
 
-		setFilms(state, films) {
-			state.films = films
+		setFilms(state, filmsSoon) {
+			state.filmsSoon = filmsSoon
 		},
 		setIsLoading(state, isLoading) {
 			state.isLoading = isLoading;

@@ -57,9 +57,18 @@
             </div>
           </div>
 
-          <button :disabled="btnControl" @click="addImageGallery">
-            Додати
-          </button>
+          <label class="btn bg-olive margin" for="clearImgGallay">
+            <span>Додати</span>
+          </label>
+
+          <input
+            accept=".png, .jpg, .jpeg"
+            type="file"
+            ref="InputImg"
+            class="img-input"
+            v-on:change="addImageGallery()"
+            id="clearImgGallay"
+          />
         </div>
       </div>
       <div class="film__ref-trailer">
@@ -117,7 +126,7 @@
 </template>
 
 <script>
-import ImgGallaryFilm from "@/components/ImgGallaryFilm.vue";
+import ImgGallaryFilm from "@/components/films/filmListNow/ImgGallaryFilm.vue";
 const defaultImg = require("@/assets/img/prevue.png");
 export default {
   components: {
@@ -130,7 +139,7 @@ export default {
       file: null,
       fileUrl: null,
       fileLocal: this.itemUa.fileLocal,
-      btnControl: false,
+
       uniqueKey: 0,
     };
   },
@@ -187,14 +196,15 @@ export default {
 
     async addImageGallery() {
       await this.galleryImg.push({
-        image: "",
+        image: this.$refs.InputImg.files[0],
         key: this.uniqueKey++,
       });
       this.itemUa.galleryImg = this.galleryImg;
-      this.$refs.imgGallaryFilm.addImg();
-      this.galleryImg.forEach((img) => {
+      document.getElementById("clearImgGallay").value = "";
+      //this.$refs.InputImg.valueOf = "";
+      this.galleryImg.forEach((img, index) => {
         if (!img.image) {
-          this.btnControl = true;
+          this.galleryImg.splice(index, 1);
         }
       });
     },
@@ -369,5 +379,8 @@ export default {
 .save-img {
   display: flex;
   justify-content: center;
+}
+.img-input {
+  display: none;
 }
 </style>

@@ -7,8 +7,14 @@ import Newsletter from "@/pages/Newsletter"
 import Stock from "@/pages/Stock"
 import PagesKino from "@/pages/PagesKino"
 import Users from "@/pages/Users"
-import CreateFilm from "@/pages/CreateFilm"
-import FilmsContent from '@/components/FilmsContent';
+import CreateFilm from "@/components/films/filmListNow/CreateFilm"
+import CreateFilmSoon from "@/components/films/filmListSoon/CreateFilmSoon"
+import FilmsContent from '@/components/films/FilmsContent';
+import CartCinema from '@/components/cinemas/CartCinema';
+import CinemasContent from '@/components/cinemas/CinemasContent';
+import HallCard from '@/components/cinemas/HallCard';
+import NewsContent from "@/components/news/NewsContent";
+import CardNews from '@/components/news/CardNews'
 
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -36,6 +42,15 @@ const routes = [
 			{
 				path: 'edit/:id',
 				component: CreateFilm
+			},
+			{
+				path: 'createFilmSoon',
+				component: CreateFilmSoon
+			},
+
+			{
+				path: 'edit/filmSoon/:id',
+				component: CreateFilmSoon
 			}
 		]
 
@@ -45,14 +60,45 @@ const routes = [
 		component: News,
 		children: [
 			{
-				path: ':id',
-				component: Films
+				path: '',
+				component: NewsContent
+			},
+			{
+				path: 'create',
+				component: CardNews
 			}
 		]
 	},
 	{
 		path: '/cinemas',
-		component: Сinemas
+		component: Сinemas,
+		children: [
+			{
+				path: '',
+				component: CinemasContent
+			},
+			{
+				path: 'create/cinema',
+				component: CartCinema,
+			},
+			{
+				path: 'edit/:id',
+				component: CartCinema,
+			},
+			{
+				path: 'create/cinema/hall/',
+				component: HallCard,
+				name: 'hallCard',
+				props: true
+				// props: (route) => ({ query: route.query })
+			},
+			{
+				path: 'edit/hall/:id',
+				component: HallCard,
+				name: 'editHall',
+				props: true
+			}
+		]
 	},
 	{
 		path: '/stock',

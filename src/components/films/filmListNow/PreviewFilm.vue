@@ -57,7 +57,7 @@ export default {
   &__delete {
     cursor: pointer;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     position: relative;
     top: 30px;
     right: 30px;

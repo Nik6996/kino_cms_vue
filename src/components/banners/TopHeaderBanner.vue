@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import NewBanner from "@/components/NewBanner.vue";
+import NewBanner from "@/components/banners/NewBanner.vue";
 import { mapGetters } from "vuex";
 import { cloneDeep } from "lodash/fp";
 

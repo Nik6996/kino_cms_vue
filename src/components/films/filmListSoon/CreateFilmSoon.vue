@@ -14,14 +14,15 @@
     </div>
 
     <div v-if="this.ukr == true">
-      <film-pages-ua
+      <film-ua-soon
         @imgIdRemoveUa="idRemoveUa"
         ref="uaFilm"
         :itemUa="items.itemUa"
       />
     </div>
+
     <div v-else>
-      <film-pages-rus
+      <film-rus-soon
         @imgIdRemoveRu="idRemoveRu"
         ref="ruFilm"
         :itemRu="items.itemRu"
@@ -40,8 +41,9 @@
 <script>
 import { mapGetters } from "vuex";
 
-import FilmPagesRus from "@/components/FilmPagesRus.vue";
-import FilmPagesUa from "@/components/FilmPagesUa.vue";
+import FilmRusSoon from "@/components/films/filmListSoon/FilmRusSoon.vue";
+import FilmUaSoon from "@/components/films/filmListSoon/FilmUaSoon.vue";
+
 export default {
   data() {
     return {
@@ -94,20 +96,20 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isLoading: "film/isLoading",
-      films: "film/getFilms",
+      isLoading: "filmSoon/isLoading",
+      films: "filmSoon/getFilms",
     }),
   },
 
   components: {
-    FilmPagesRus,
-    FilmPagesUa,
+    FilmUaSoon,
+    FilmRusSoon,
   },
   async created() {
-    await this.$store.dispatch("film/loadFims");
+    await this.$store.dispatch("filmSoon/loadFims");
     if (this.$route.params.id) {
       await this.loadFilm();
-
+      console.log(this.items.itemUa);
       this.$refs.uaFilm.loadImg();
     } else {
       console.log("false");
@@ -136,8 +138,8 @@ export default {
       }
 
       try {
-        await this.$store.dispatch("film/saveFilm", this.items);
-
+        await this.$store.dispatch("filmSoon/saveFilm", this.items);
+        console.log(this.items);
         this.$router.push("/films");
       } catch (error) {
         console.log(error);

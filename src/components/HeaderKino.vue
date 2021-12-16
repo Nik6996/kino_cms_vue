@@ -25,6 +25,10 @@ export default {};
   margin: 10px 80px;
 }
 .main-header {
+  background-color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
   margin-left: 0 !important;
   display: flex;
   justify-content: space-between;

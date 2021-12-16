@@ -4,6 +4,9 @@ import { bannersMainTop } from './modules/bannersMainTop'
 import { backgroundBanner } from './modules/backgroundBanner'
 import { mainNewsStock } from './modules/mainNewsStock'
 import { film } from './modules/film'
+import { filmSoon } from './modules/filmSoon'
+
+import { cinema } from './modules/cinema'
 
 export default createStore({
 
@@ -11,6 +14,9 @@ export default createStore({
 		bannersMainTop: bannersMainTop,
 		backgroundBanner: backgroundBanner,
 		mainNewsStock: mainNewsStock,
-		film: film
+		film: film,
+		filmSoon: filmSoon,
+
+		cinema: cinema
 	}
 })

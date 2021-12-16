@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import TopHeaderBanner from "@/components/TopHeaderBanner.vue";
-import BackgroundBanner from "@/components/BackgroundBanner.vue";
-import MainNewsStock from "@/components/MainNewsStock.vue";
+import TopHeaderBanner from "@/components/banners/TopHeaderBanner.vue";
+import BackgroundBanner from "@/components/banners/BackgroundBanner.vue";
+import MainNewsStock from "@/components/banners/MainNewsStock.vue";
 
 export default {
   components: {
