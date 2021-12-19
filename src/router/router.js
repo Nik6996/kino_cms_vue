@@ -15,6 +15,8 @@ import CinemasContent from '@/components/cinemas/CinemasContent';
 import HallCard from '@/components/cinemas/HallCard';
 import NewsContent from "@/components/news/NewsContent";
 import CardNews from '@/components/news/CardNews'
+import StockContent from "@/components/stock/StockContent";
+import CardStock from '@/components/stock/CardStock'
 
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -106,7 +108,21 @@ const routes = [
 	},
 	{
 		path: '/stock',
-		component: Stock
+		component: Stock,
+		children: [
+			{
+				path: '',
+				component: StockContent
+			},
+			{
+				path: 'create',
+				component: CardStock
+			},
+			{
+				path: 'edit/:id',
+				component: CardStock,
+			},
+		]
 	},
 	{
 		path: '/pages',

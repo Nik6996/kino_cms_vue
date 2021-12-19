@@ -1,10 +1,22 @@
 <template>
-  <div><h1>STOCK</h1></div>
+  <div>
+    <div class="main-stock">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {};
+import StockContent from "@/components/stock/StockContent.vue";
+export default {
+  components: {
+    StockContent,
+  },
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.main-stock {
+  margin-top: 100px;
+}
 </style>
