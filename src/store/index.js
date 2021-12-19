@@ -7,6 +7,7 @@ import { film } from './modules/film'
 import { filmSoon } from './modules/filmSoon'
 
 import { cinema } from './modules/cinema'
+import { news } from './modules/news'
 
 export default createStore({
 
@@ -16,7 +17,7 @@ export default createStore({
 		mainNewsStock: mainNewsStock,
 		film: film,
 		filmSoon: filmSoon,
-
-		cinema: cinema
+		cinema: cinema,
+		news: news
 	}
 })

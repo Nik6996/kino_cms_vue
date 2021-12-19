@@ -66,7 +66,11 @@ const routes = [
 			{
 				path: 'create',
 				component: CardNews
-			}
+			},
+			{
+				path: 'edit/:id',
+				component: CardNews,
+			},
 		]
 	},
 	{

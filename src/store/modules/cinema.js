@@ -414,7 +414,6 @@ export const cinema = {
         if (check == true) {
           commit('setCinemaArray', item)
 
-
         }
         //commit('setHalls', item.halls);
 
