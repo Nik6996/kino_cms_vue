@@ -16,7 +16,13 @@
       </div>
     </transition>
 
-    <div @click="modalRemove()" class="cart__delete"><span>X</span></div>
+    <div
+      v-if="this.$store.getters[`cinema/getCinemas`].length > 1"
+      @click="modalRemove()"
+      class="cart__delete"
+    >
+      <span>X</span>
+    </div>
     <router-link
       class="button"
       :to="'/cinemas/edit/' + this.$attrs.modelValue.id"

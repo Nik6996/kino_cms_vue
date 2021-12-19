@@ -22,6 +22,7 @@
           <hall-ua
             @deleteGallaryImgUa="deleteGallaryImgUa"
             :hallUa="hallData.hallUa"
+            ref="hallUa"
           />
         </div>
         <div v-else>
@@ -56,7 +57,7 @@
 <script>
 import HallRu from "@/components/cinemas/cinema-ru/HallRu.vue";
 import HallUa from "@/components/cinemas/cinema-ua/HallUa.vue";
-
+//const numberHall = this.hallData.hallUa.number;
 export default {
   components: {
     HallRu,
@@ -130,6 +131,15 @@ export default {
         }
       },
     },
+    hallData: {
+      handler(data) {
+        if (data.hallUa.number) {
+          this.isError = false;
+          this.validationBtn = true;
+        }
+      },
+      deep: true,
+    },
   },
   async mounted() {
     if (this.$route.params.id) {
@@ -139,7 +149,6 @@ export default {
       await halls.forEach((item) => {
         if (item.id == this.hallData.id) {
           this.hallData = item;
-          console.log(item);
         }
       });
       // console.log(this.$store.getters[`cinema/getHalls`]);
@@ -163,6 +172,7 @@ export default {
       if (!this.hallData.hallUa.number) {
         this.validationBtn = false;
         this.isError = true;
+        this.$refs.hallUa.validation();
       } else {
         await this.$store.dispatch("cinema/saveHall", this.hallData);
         //this.$router.push("/cinemas/create/cinema/");

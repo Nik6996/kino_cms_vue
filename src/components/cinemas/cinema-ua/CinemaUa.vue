@@ -154,7 +154,7 @@ export default {
         bannerLocalUrl: "",
       },
       gallary: this.cinemaUa.gallary,
-      gallaryUrl: "",
+
       halls: "",
     };
   },
@@ -343,12 +343,6 @@ export default {
     border-radius: 7px;
     width: 120px;
     background-color: rgb(226, 97, 97);
-  }
-
-  &__list-hall {
-  }
-
-  &__save {
   }
 
   &__seo-block {

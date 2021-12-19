@@ -3,7 +3,12 @@
     <div class="hall">
       <div class="hall__number">
         <span>Номер залу</span>
-        <input v-model="hallUa.number" type="text" placeholder="Номер залу" />
+        <input
+          v-bind:class="{ active: isActive }"
+          v-model="hallUa.number"
+          type="text"
+          placeholder="Номер залу"
+        />
       </div>
       <div class="hall__description">
         <span>Опис залу</span>
@@ -31,7 +36,7 @@
       </div>
 
       <div class="hall__banner-img">
-        <span>Верхній банер</span>
+        <span>Верхнiй банер</span>
         <label class="hall__img-banner"
           ><input
             ref="imgBanner"
@@ -133,6 +138,7 @@ export default {
         bannerLocalUrl: this.hallUa.banner.bannerLocal,
       },
       gallary: this.hallUa.gallary,
+      isActive: false,
     };
   },
   components: {
@@ -147,7 +153,11 @@ export default {
     hallUa: {
       handler(hallUa) {
         this.gallary = hallUa.gallary;
+        if (hallUa.number) {
+          this.isActive = false;
+        }
       },
+      deep: true,
     },
   },
 
@@ -175,6 +185,9 @@ export default {
     },
   },
   methods: {
+    validation() {
+      this.isActive = true;
+    },
     deleteGallaryImg(id) {
       this.$emit("deleteGallaryImgUa", id);
     },
@@ -366,5 +379,8 @@ export default {
 }
 .img-input {
   display: none;
+}
+.active {
+  box-shadow: 0px 0px 10px red;
 }
 </style>

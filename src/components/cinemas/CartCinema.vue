@@ -69,7 +69,7 @@ export default {
             bannerLocal: "",
           },
           gallary: [],
-          gallaryUrl: [],
+
           seoUrl: "",
           seoTitle: "",
           seoKeywords: "",
