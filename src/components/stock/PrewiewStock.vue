@@ -50,10 +50,10 @@ export default {
   },
   //.toLocaleDateString()
   mounted() {
-    if (this.$attrs.modelValue.toggle == true) {
+    if (this.$attrs.modelValue.toggle === "true") {
       this.status = "Вкл";
     }
-    if (this.$attrs.modelValue.toggle == "false") {
+    if (this.$attrs.modelValue.toggle === "false") {
       this.status = "Выкл";
     }
   },

@@ -7,12 +7,7 @@
 </template>
 
 <script>
-import NewsContent from "@/components/news/NewsContent.vue";
-export default {
-  components: {
-    NewsContent,
-  },
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

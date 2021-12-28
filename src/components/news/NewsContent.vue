@@ -112,8 +112,5 @@ export default {
   &__status {
     width: 60%;
   }
-
-  &__list {
-  }
 }
 </style>

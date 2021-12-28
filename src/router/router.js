@@ -17,6 +17,18 @@ import NewsContent from "@/components/news/NewsContent";
 import CardNews from '@/components/news/CardNews'
 import StockContent from "@/components/stock/StockContent";
 import CardStock from '@/components/stock/CardStock'
+import PageContent from '@/components/pages/PageContent'
+import CustomPageCard from '@/components/pages/page-list/CustomPageCard'
+import MainCard from '@/components/pages/page-list/main-page/MainCard'
+import InfoCard from '@/components/pages/page-list/info-page/InfoCard'
+import CafeCard from '@/components/pages/page-list/cafe-page/CafeCard'
+import VipCard from '@/components/pages/page-list/vip-hall-page/VipCard'
+import AdvertisingCard from '@/components/pages/page-list/advertising-page/AdvertisingCard'
+import ChildrensCard from '@/components/pages/page-list/childrens-room-page/ChildrensCard'
+import ContactsCard from '@/components/pages/page-list/contacts-page/ContactsCard'
+import Registration from '@/components/Registration.vue'
+import UsersContent from '@/components/users/UsersContent'
+
 
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -24,6 +36,10 @@ const routes = [
 	{
 		path: '/',
 		component: Banners
+	},
+	{
+		path: '/registration',
+		component: Registration,
 	},
 	{
 		path: '/statistic',
@@ -126,11 +142,62 @@ const routes = [
 	},
 	{
 		path: '/pages',
-		component: PagesKino
+		component: PagesKino,
+		children: [{
+			path: '',
+			component: PageContent,
+		},
+		{
+			path: 'create',
+			component: CustomPageCard
+		},
+		{
+			path: 'main',
+			component: MainCard,
+		},
+		{
+			path: 'info',
+			component: InfoCard,
+
+		},
+		{
+			path: 'cafe',
+			component: CafeCard,
+		},
+		{
+			path: 'vip',
+			component: VipCard,
+		},
+		{
+			path: 'advertising',
+			component: AdvertisingCard,
+		},
+		{
+			path: 'childrens',
+			component: ChildrensCard,
+		},
+		{
+			path: 'contacts',
+			component: ContactsCard,
+		},
+		{
+			path: 'edit/:id',
+			component: CustomPageCard
+		}
+		]
 	},
 	{
 		path: '/users',
-		component: Users
+		component: Users,
+		children: [{
+			path: '',
+			component: UsersContent
+		},
+		{
+			path: '/edit/user/:id',
+			component: Registration
+		},
+		]
 	},
 	{
 		path: '/newsletter',
