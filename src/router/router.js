@@ -28,6 +28,9 @@ import ChildrensCard from '@/components/pages/page-list/childrens-room-page/Chil
 import ContactsCard from '@/components/pages/page-list/contacts-page/ContactsCard'
 import Registration from '@/components/Registration.vue'
 import UsersContent from '@/components/users/UsersContent'
+import UserChoice from '@/components/mailing/UserChoice'
+import Admin from '@/components/Admin'
+import Home from '@/components/Home'
 
 
 import { createRouter, createWebHashHistory } from "vue-router";
@@ -35,174 +38,193 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
 	{
 		path: '/',
-		component: Banners
+		component: Home
 	},
+	//Админка
 	{
-		path: '/registration',
-		component: Registration,
-	},
-	{
-		path: '/statistic',
-		component: Statistic
-	},
-	{
-		path: '/films',
-		component: Films,
+		path: '/admin',
+		component: Admin,
 		children: [
 			{
-				path: '',
-				component: FilmsContent,
+				path: '/banners',
+				component: Banners
 			},
 			{
-				path: 'create',
-				component: CreateFilm
+				path: '/registration',
+				component: Registration,
 			},
 			{
-				path: 'edit/:id',
-				component: CreateFilm
+				path: '/statistic',
+				component: Statistic
 			},
 			{
-				path: 'createFilmSoon',
-				component: CreateFilmSoon
-			},
+				path: '/films',
+				component: Films,
+				children: [
+					{
+						path: '',
+						component: FilmsContent,
+					},
+					{
+						path: 'create',
+						component: CreateFilm
+					},
+					{
+						path: 'edit/:id',
+						component: CreateFilm
+					},
+					{
+						path: 'createFilmSoon',
+						component: CreateFilmSoon
+					},
 
+					{
+						path: 'edit/filmSoon/:id',
+						component: CreateFilmSoon
+					}
+				]
+
+			},
 			{
-				path: 'edit/filmSoon/:id',
-				component: CreateFilmSoon
+				path: '/news',
+				component: News,
+				children: [
+					{
+						path: '',
+						component: NewsContent
+					},
+					{
+						path: 'create',
+						component: CardNews
+					},
+					{
+						path: 'edit/:id',
+						component: CardNews,
+					},
+				]
+			},
+			{
+				path: '/cinemas',
+				component: Сinemas,
+				children: [
+					{
+						path: '',
+						component: CinemasContent
+					},
+					{
+						path: 'create/cinema',
+						component: CartCinema,
+					},
+					{
+						path: 'edit/:id',
+						component: CartCinema,
+					},
+					{
+						path: 'create/cinema/hall/',
+						component: HallCard,
+						name: 'hallCard',
+						props: true
+						// props: (route) => ({ query: route.query })
+					},
+					{
+						path: 'edit/hall/:id',
+						component: HallCard,
+						name: 'editHall',
+						props: true
+					}
+				]
+			},
+			{
+				path: '/stock',
+				component: Stock,
+				children: [
+					{
+						path: '',
+						component: StockContent
+					},
+					{
+						path: 'create',
+						component: CardStock
+					},
+					{
+						path: 'edit/:id',
+						component: CardStock,
+					},
+				]
+			},
+			{
+				path: '/pages',
+				component: PagesKino,
+				children: [{
+					path: '',
+					component: PageContent,
+				},
+				{
+					path: 'create',
+					component: CustomPageCard
+				},
+				{
+					path: 'main',
+					component: MainCard,
+				},
+				{
+					path: 'info',
+					component: InfoCard,
+
+				},
+				{
+					path: 'cafe',
+					component: CafeCard,
+				},
+				{
+					path: 'vip',
+					component: VipCard,
+				},
+				{
+					path: 'advertising',
+					component: AdvertisingCard,
+				},
+				{
+					path: 'childrens',
+					component: ChildrensCard,
+				},
+				{
+					path: 'contacts',
+					component: ContactsCard,
+				},
+				{
+					path: 'edit/:id',
+					component: CustomPageCard
+				}
+				]
+			},
+			{
+				path: '/users',
+				component: Users,
+				children: [{
+					path: '',
+					component: UsersContent
+				},
+				{
+					path: '/edit/user/:id',
+					component: Registration
+				},
+				]
+			},
+			{
+				path: '/newsletter',
+				component: Newsletter,
+
+			},
+			{
+				path: '/newsletter/users',
+				component: UserChoice
 			}
 		]
+	},
 
-	},
-	{
-		path: '/news',
-		component: News,
-		children: [
-			{
-				path: '',
-				component: NewsContent
-			},
-			{
-				path: 'create',
-				component: CardNews
-			},
-			{
-				path: 'edit/:id',
-				component: CardNews,
-			},
-		]
-	},
-	{
-		path: '/cinemas',
-		component: Сinemas,
-		children: [
-			{
-				path: '',
-				component: CinemasContent
-			},
-			{
-				path: 'create/cinema',
-				component: CartCinema,
-			},
-			{
-				path: 'edit/:id',
-				component: CartCinema,
-			},
-			{
-				path: 'create/cinema/hall/',
-				component: HallCard,
-				name: 'hallCard',
-				props: true
-				// props: (route) => ({ query: route.query })
-			},
-			{
-				path: 'edit/hall/:id',
-				component: HallCard,
-				name: 'editHall',
-				props: true
-			}
-		]
-	},
-	{
-		path: '/stock',
-		component: Stock,
-		children: [
-			{
-				path: '',
-				component: StockContent
-			},
-			{
-				path: 'create',
-				component: CardStock
-			},
-			{
-				path: 'edit/:id',
-				component: CardStock,
-			},
-		]
-	},
-	{
-		path: '/pages',
-		component: PagesKino,
-		children: [{
-			path: '',
-			component: PageContent,
-		},
-		{
-			path: 'create',
-			component: CustomPageCard
-		},
-		{
-			path: 'main',
-			component: MainCard,
-		},
-		{
-			path: 'info',
-			component: InfoCard,
 
-		},
-		{
-			path: 'cafe',
-			component: CafeCard,
-		},
-		{
-			path: 'vip',
-			component: VipCard,
-		},
-		{
-			path: 'advertising',
-			component: AdvertisingCard,
-		},
-		{
-			path: 'childrens',
-			component: ChildrensCard,
-		},
-		{
-			path: 'contacts',
-			component: ContactsCard,
-		},
-		{
-			path: 'edit/:id',
-			component: CustomPageCard
-		}
-		]
-	},
-	{
-		path: '/users',
-		component: Users,
-		children: [{
-			path: '',
-			component: UsersContent
-		},
-		{
-			path: '/edit/user/:id',
-			component: Registration
-		},
-		]
-	},
-	{
-		path: '/newsletter',
-		component: Newsletter
-	},
+
 
 ]
 

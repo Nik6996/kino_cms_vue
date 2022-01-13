@@ -17,6 +17,7 @@ import { childrensPage } from './modules/pages/childrens'
 import { contactsPage } from './modules/pages/contacts'
 import { customPage } from './modules/pages/custom'
 import { registration } from './modules/registration'
+import { mailing } from './modules/mailing'
 
 export default createStore({
 
@@ -37,8 +38,7 @@ export default createStore({
 		childrensPage: childrensPage,
 		contactsPage: contactsPage,
 		customPage: customPage,
-
-		registration:
-			registration
+		registration: registration,
+		mailing: mailing
 	}
 })

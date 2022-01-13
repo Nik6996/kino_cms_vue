@@ -5,20 +5,34 @@
       <div class="registration__content">
         <div class="registration__left">
           <div class="registration__name">
-            <span>Имя</span>
-            <input v-model="user.name" type="text" />
+            <span class="registration__color">Имя<span>*</span></span>
+            <input
+              :class="{ 'registration__error-input': validate.name === true }"
+              v-model="user.name"
+              type="text"
+            />
           </div>
           <div class="registration__surname">
-            <span>Фамилия</span>
-            <input v-model="user.surname" type="text" />
+            <span class="registration__color">Фамилия<span>*</span></span>
+            <input
+              :class="{
+                'registration__error-input': validate.surname === true,
+              }"
+              v-model="user.surname"
+              type="text"
+            />
           </div>
           <div class="registration__alias">
             <span>Псевдоним</span>
             <input v-model="user.alias" type="text" />
           </div>
           <div class="registration__email">
-            <span>E-mail</span>
-            <input v-model="user.email" type="text" />
+            <span class="registration__color">E-mail<span>*</span></span>
+            <input
+              :class="{ 'registration__error-input': validate.email === true }"
+              v-model="user.email"
+              type="text"
+            />
           </div>
           <div class="registration__address">
             <span>Адресс</span>
@@ -29,8 +43,23 @@
             />
           </div>
           <div class="registration__password">
-            <span>Пароль</span>
-            <input v-model="user.password" type="text" />
+            <span class="registration__color">Пароль<span>*</span></span>
+            <div @click="watchPass()" class="registration__watch">
+              <img
+                v-if="this.watchPassword"
+                src="@/assets/icon/watch.svg"
+                alt=""
+              />
+              <img v-else src="@/assets/icon/watch-off.svg" alt="" />
+            </div>
+            <input
+              :class="{
+                'registration__error-input': validate.password === true,
+              }"
+              v-model="user.password"
+              type="password"
+              id="password"
+            />
           </div>
           <div class="registration__number-card">
             <span>Номер карты</span>
@@ -88,7 +117,7 @@
             <div class="registration__published">
               <span>Дата рождения</span>
               <div class="registration__date-published">
-                <span>{{ user.date.toLocaleDateString() }}</span>
+                <span>{{ user.fullDate }}</span>
                 <div @click="calendar()" class="registration__calendar-btn">
                   <img
                     class="registration__btn-calendar"
@@ -119,10 +148,30 @@
             </select>
           </div>
           <div class="registration__password-check">
-            <span>Повторить пароль</span>
-            <input v-model="passwordCheck" type="text" />
+            <span class="registration__color"
+              >Повторить пароль<span>*</span></span
+            >
+            <div @click="watchPassCheck()" class="registration__watch">
+              <img
+                v-if="this.watchPasswordCheck"
+                src="@/assets/icon/watch.svg"
+                alt=""
+              />
+              <img v-else src="@/assets/icon/watch-off.svg" alt="" />
+            </div>
+            <input
+              :class="{
+                'registration__error-input': validate.passwordCheck === true,
+              }"
+              v-model="passwordCheck"
+              type="password"
+              id="passwordCheck"
+            />
           </div>
         </div>
+      </div>
+      <div v-if="this.errorMassage" class="registration__validate">
+        {{ errorMassage }}
       </div>
       <div @click="save()" class="registration__save">
         <button>Сохранить</button>
@@ -133,6 +182,7 @@
 
 <script>
 import { Calendar, DatePicker } from "v-calendar";
+
 export default {
   data() {
     return {
@@ -148,12 +198,23 @@ export default {
         gender: "",
         phone: "",
         date: new Date(),
+        fullDate: "",
         town: "",
         id: "",
         dateRegistration: "",
       },
       isActive: false,
       passwordCheck: "",
+      errorMassage: null,
+      validate: {
+        name: false,
+        surname: false,
+        email: false,
+        password: false,
+        passwordCheck: false,
+      },
+      watchPassword: false,
+      watchPasswordCheck: false,
     };
   },
   components: {
@@ -172,9 +233,116 @@ export default {
       }
     }
   },
+  watch: {
+    user: {
+      handler(user) {
+        const date = new Date(user.date);
+        const year = String(date.getFullYear());
+        const mounth = String(date.getMonth() + 1);
+        const day = String(date.getDate());
+        const fullDate = `${day}.${mounth}.${year}`;
+        this.user.fullDate = fullDate;
+        if (user.name) {
+          this.validate.name = false;
+          this.errorMassage = null;
+        }
+        if (this.user.name.length > 3) {
+          this.validate.name = false;
+          this.errorMassage = null;
+        }
+        if (user.surname) {
+          this.validate.surname = false;
+          this.errorMassage = null;
+        }
+        if (user.email) {
+          this.validate.email = false;
+          this.errorMassage = null;
+        }
+        if (this.validEmail(user.email)) {
+          this.validate.email = false;
+          this.errorMassage = null;
+        }
+        if (user.password) {
+          this.validate.password = false;
+          this.errorMassage = null;
+        }
+        if (user.password.length > 6) {
+          this.validate.password = false;
+          this.errorMassage = null;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     async save() {
-      this.$store.dispatch("registration/saveUser", this.user);
+      if (!this.user.name) {
+        console.log("нет имени");
+        this.errorMassage = "Введите имя";
+        this.validate.name = true;
+        return;
+      } else {
+        this.validate.name = false;
+      }
+      if (this.user.name.length < 3) {
+        console.log("короткое имя");
+        this.errorMassage = "Имя должно состоять из 3-х или более символов";
+        this.validate.name = true;
+        return;
+      } else {
+        this.validate.name = false;
+      }
+      if (!this.user.surname) {
+        console.log("нет фамилии");
+        this.errorMassage = "Введите фамилию";
+        this.validate.surname = true;
+        return;
+      } else {
+        this.validate.surname = false;
+      }
+      if (!this.user.email) {
+        console.log("введите почту");
+        this.errorMassage = "Введите почту";
+        this.validate.email = true;
+        return;
+      } else {
+        this.validate.email = false;
+      }
+      if (!this.validEmail(this.user.email)) {
+        console.log("Укажите корректный адрес электронной почты");
+        this.errorMassage = "Укажите корректный адрес электронной почты";
+        this.validate.email = true;
+        return;
+      } else {
+        this.validate.email = false;
+      }
+      if (!this.user.password) {
+        console.log("НЕТ ПАРОЛЯ");
+        this.errorMassage = "Введите пароль";
+        this.validate.password = true;
+        return;
+      } else {
+        this.validate.password = false;
+      }
+      if (this.user.password.length < 6) {
+        console.log("короткий");
+        this.errorMassage = "Пароль должен состоять из 6 или более символов";
+        this.validate.password = true;
+        return;
+      } else {
+        this.validate.password = false;
+      }
+      if (this.user.password !== this.passwordCheck) {
+        console.log("неверный пароль");
+        this.errorMassage = "Неверное подтверждение пароля";
+        this.validate.passwordCheck = true;
+        return;
+      } else {
+        this.validate.passwordCheck = false;
+      }
+      console.log("12345");
+      this.errorMassage = null;
+      await this.$store.dispatch("registration/saveUser", this.user);
 
       if (this.$route.params.id) {
         this.$router.push("/users");
@@ -191,12 +359,47 @@ export default {
         }
       });
     },
+    validEmail(email) {
+      let re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
 
     calendar() {
       if (!this.isActive) {
         this.isActive = true;
       } else {
         this.isActive = false;
+      }
+    },
+    watchPass() {
+      const pass = document.getElementById("password");
+      if (!this.watchPassword) {
+        this.watchPassword = true;
+      } else {
+        this.watchPassword = false;
+      }
+      if (this.watchPassword) {
+        pass.type = "text";
+        // confirm.type = "text";
+      } else {
+        pass.type = "password";
+        //confirm.type = "password";
+      }
+    },
+    watchPassCheck() {
+      const pass = document.getElementById("passwordCheck");
+      if (!this.watchPasswordCheck) {
+        this.watchPasswordCheck = true;
+      } else {
+        this.watchPasswordCheck = false;
+      }
+      if (this.watchPasswordCheck) {
+        pass.type = "text";
+        // confirm.type = "text";
+      } else {
+        pass.type = "password";
+        // confirm.type = "password";
       }
     },
   },
@@ -230,6 +433,7 @@ export default {
   &__address,
   &__password,
   &__number-card {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
@@ -286,6 +490,7 @@ export default {
   }
 
   &__password-check {
+    position: relative;
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
@@ -298,6 +503,7 @@ export default {
 
   &__save {
     margin-top: 20px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: center;
   }
@@ -305,6 +511,7 @@ export default {
   &__calendar {
     margin-bottom: 20px;
     position: relative;
+    z-index: 20;
     span {
       margin-right: 40px;
     }
@@ -362,6 +569,29 @@ export default {
       width: 25px;
       height: 25px;
       transition: all 0.5s;
+    }
+  }
+  &__color {
+    span {
+      color: red;
+    }
+  }
+  &__validate {
+    display: flex;
+    justify-content: center;
+    color: red;
+  }
+  &__error-input {
+    box-shadow: 0px 0px 10px red;
+  }
+  &__watch {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    bottom: -16px;
+    img {
+      width: 20px;
+      height: 20px;
     }
   }
 }

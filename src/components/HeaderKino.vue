@@ -10,7 +10,11 @@
             <input v-model="user.email" placeholder="Email" type="text" />
           </div>
           <div class="login__password">
-            <input v-model="user.password" placeholder="Пароль" type="text" />
+            <input
+              v-model="user.password"
+              placeholder="Пароль"
+              type="password"
+            />
           </div>
           <button @click="logIn()" class="login__btn">Войти</button>
         </div>
@@ -23,6 +27,7 @@
       </div>
 
       <div class="right-bar">
+        <button @click="$router.push('/')">Главная</button>
         <div class="user-name">{{ nameCurrentUser }}</div>
         <div
           v-if="!isUserIn"

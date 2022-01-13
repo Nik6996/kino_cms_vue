@@ -146,15 +146,15 @@ export const registration = {
 				signInWithEmailAndPassword(auth, email, password)
 					.then((userCredential) => {
 
-						// const user = userCredential.user;
-						// console.log(user.email)
-						// const users = getters.getUsers;
-						// users.forEach(getUser => {
-						// 	console.log(getUser.email)
-						// 	if (getUser.email === user.email) {
-						// 		commit('setCurrentUser', getUser.name)
-						// 	}
-						// })
+						const user = userCredential.user;
+
+						const users = getters.getUsers;
+						users.forEach(getUser => {
+
+							if (getUser.email === user.email) {
+								commit('setCurrentUser', getUser.name)
+							}
+						})
 					})
 
 

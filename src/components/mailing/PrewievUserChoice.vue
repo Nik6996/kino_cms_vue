@@ -3,6 +3,9 @@
     <div class="users">
       <div class="users__content">
         <div class="users__header-list">
+          <div class="users__block1">
+            <input type="checkbox" />
+          </div>
           <div class="users__block">{{ this.id }}</div>
           <div class="users__block">{{ this.dateRegistration }}</div>
           <div class="users__block">{{ this.date }}</div>
@@ -15,17 +18,6 @@
           </div>
           <div class="users__block">{{ this.alias }}</div>
           <div class="users__block">{{ this.town }}</div>
-        </div>
-        <div class="users__edit">
-          <router-link
-            @click="userEdit()"
-            :to="'/edit/user/' + this.$attrs.modelValue.id"
-          >
-            <img src="@/assets/icon/edit-hall.png" alt="" />
-          </router-link>
-        </div>
-        <div @click="userRemove()" class="users__delete">
-          <img src="@/assets/icon/remove-hall.png" alt="" />
         </div>
       </div>
     </div>
@@ -59,7 +51,6 @@ export default {
     const day = String(date.getDate());
     const fullDate = `${day}.${mounth}.${year}`;
     this.date = fullDate;
-    console.log(fullDate);
   },
 
   methods: {
@@ -93,7 +84,7 @@ export default {
     font-size: 15px;
     font-weight: 500;
 
-    width: 137.25px;
+    width: 133.8px;
     background-color: rgb(231, 231, 231);
     display: flex;
     align-items: center;
@@ -125,6 +116,12 @@ export default {
       width: 20px;
       height: 25px;
     }
+  }
+  &__block1 {
+    padding: 0px 8px;
+    display: flex;
+    align-items: center;
+    background-color: rgb(231, 231, 231);
   }
 }
 </style>

@@ -2,27 +2,27 @@
 
 <template>
   <div class="app">
-    <header-kino />
-    <sidebar />
-    <div class="main"><router-view></router-view></div>
+    <!-- <header-kino />
+    <sidebar /> -->
+    <div><router-view></router-view></div>
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar";
-import HeaderKino from "@/components/HeaderKino";
+// import Sidebar from "@/components/Sidebar";
+// import HeaderKino from "@/components/HeaderKino";
 
 export default {
-  components: {
-    Sidebar,
-    HeaderKino,
-  },
+  // components: {
+  //   Sidebar,
+  //   HeaderKino,
+  // },
 };
 </script>
 
 <style>
 @import "~admin-lte/dist/css/adminlte.min.css";
-.main {
+/* .main {
   margin-left: 250px;
-}
+} */
 </style>
