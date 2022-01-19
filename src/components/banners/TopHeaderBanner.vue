@@ -59,7 +59,7 @@ export default {
       formData: {
         items: [],
         interval: "5c",
-        toggle: true,
+        toggle: "",
       },
     };
   },
@@ -87,7 +87,12 @@ export default {
     },
     toggle: {
       handler(toggle) {
-        this.formData.toggle = toggle;
+        if (toggle === "true") {
+          this.formData.toggle = true;
+        }
+        if (toggle === "false") {
+          this.formData.toggle = false;
+        }
       },
     },
   },

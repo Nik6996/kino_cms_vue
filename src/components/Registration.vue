@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="registration">
-      <div class="registration__title"><span>Страница Клиента</span></div>
+      <div v-if="this.nameCurrentUser" class="registration__title">
+        <span>Страница Клиента</span>
+      </div>
+      <div v-else class="registration__title"><span>Регистрация</span></div>
       <div class="registration__content">
         <div class="registration__left">
           <div class="registration__name">
@@ -182,7 +185,7 @@
 
 <script>
 import { Calendar, DatePicker } from "v-calendar";
-
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -222,16 +225,27 @@ export default {
     DatePicker,
   },
   async mounted() {
+    await this.$store.dispatch("registration/load");
+
     if (!this.user.id) {
       if (this.$route.params.id) {
         this.user.id = Number(this.$route.params.id);
-        await this.$store.dispatch("registration/load");
+        this.load();
+      }
+      if (this.currentUserId) {
+        this.user.id = this.currentUserId;
         this.load();
       } else {
         this.user.id = new Date().valueOf();
         this.user.dateRegistration = new Date().toLocaleDateString();
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      nameCurrentUser: "registration/getCurrentUserName",
+      currentUserId: "registration/getCurrentUserId",
+    }),
   },
   watch: {
     user: {
@@ -272,6 +286,12 @@ export default {
         }
       },
       deep: true,
+    },
+    currentUserId: {
+      handler(id) {
+        this.user.id = id;
+        this.load();
+      },
     },
   },
   methods: {
@@ -340,14 +360,19 @@ export default {
       } else {
         this.validate.passwordCheck = false;
       }
+      if (this.nameCurrentUser) {
+        console.log("редактировать");
+      } else {
+        console.log("создать новый");
+      }
       console.log("12345");
       this.errorMassage = null;
-      await this.$store.dispatch("registration/saveUser", this.user);
+      //await this.$store.dispatch("registration/saveUser", this.user);
 
       if (this.$route.params.id) {
         this.$router.push("/users");
       } else {
-        this.$router.push("/users");
+        this.$router.push("/");
       }
     },
     load() {
@@ -408,7 +433,10 @@ export default {
 
 <style lang="scss" scoped>
 .registration {
+  background-color: white;
+  padding: 20px;
   margin-top: 140px;
+  border-radius: 10px;
   &__title {
     font-weight: 500;
     font-size: 23px;

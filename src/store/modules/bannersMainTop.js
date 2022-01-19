@@ -7,7 +7,7 @@ import { ref as refStorage, uploadBytes, getDownloadURL, deleteObject } from "fi
 
 const default_interval = "5c";
 const BANNERS_DATABASE_PATH = 'bannersMainTop';
-const default_toggle = "true";
+const default_toggle = true;
 
 export const bannersMainTop = {
   namespaced: true,
@@ -27,6 +27,16 @@ export const bannersMainTop = {
     },
     interval(state) {
       return state.interval;
+    },
+    intervalHome(state) {
+      if (state.interval === '5с') {
+        return 5000;
+      } if (state.interval === '10с') {
+        return 10000
+      } if (state.interval === '15с') {
+        return 15000
+      }
+
     },
     toggle(state) {
       return state.toggle;
@@ -149,14 +159,14 @@ export const bannersMainTop = {
         const intervalRecord = await get(intervalRef);
 
         if (intervalRecord.exists()) {
-          commit('setInterval', intervalRecord.val())
+          await commit('setInterval', intervalRecord.val())
         };
 
         const toggleRef = ref(database, `${BANNERS_DATABASE_PATH}/toggle`);
         const toggleRecord = await get(toggleRef);
 
         if (toggleRecord.exists()) {
-          commit('setToggle', toggleRecord.val())
+          await commit('setToggle', toggleRecord.val())
         }
 
       } catch (error) {

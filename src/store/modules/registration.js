@@ -9,7 +9,9 @@ export const registration = {
 
 	state: () => ({
 		users: [],
-		currentUserName: ''
+		currentUserName: '',
+		currentUserUid: '',
+		currentUserId: ''
 	}),
 	getters: {
 		getUsers(state) {
@@ -17,14 +19,21 @@ export const registration = {
 		},
 		getCurrentUserName(state) {
 			return state.currentUserName
+		},
+		getCurrentUserUid(state) {
+			return state.currentUserUid
+		},
+		getCurrentUserId(state) {
+			return state.currentUserId
 		}
+
 	},
 	actions: {
 		async saveUser({ commit, getters }, user) {
 
 			async function emailUpdate(userData) {
 				if (userData.email !== user.email) {
-					console.log(12345678)
+
 					const auth = getAuth();
 					await updateEmail(auth.currentUser, user.email)
 				} else {
@@ -37,7 +46,7 @@ export const registration = {
 			}
 
 			async function emailSave(user) {
-				console.log('новый')
+
 				const auth = getAuth();
 				const email = user.email;
 				const password = user.password
@@ -122,12 +131,15 @@ export const registration = {
 
 						const uid = user.uid;
 
-
+						commit('setCurrentUserUid', uid)
 						const users = getters.getUsers;
 						users.forEach(getUser => {
-
+							if (uid === "h9y3bTZZdVcjTCyFA0bRgdjdYyT2") {
+								commit('setCurrentUser', 'Admin')
+							}
 							if (getUser.email === user.email) {
 								commit('setCurrentUser', getUser.name)
+								commit('setCurrentUserId', getUser.id)
 							}
 						})
 
@@ -153,6 +165,7 @@ export const registration = {
 
 							if (getUser.email === user.email) {
 								commit('setCurrentUser', getUser.name)
+								commit('setCurrentUserId', getUser.id)
 							}
 						})
 					})
@@ -166,6 +179,7 @@ export const registration = {
 				const auth = getAuth();
 				await signOut(auth)
 				commit('setCurrentUser', null)
+				commit('setCurrentUserId', null)
 			} catch (e) {
 				console.log(e)
 			}
@@ -173,26 +187,26 @@ export const registration = {
 
 		async removeUser({ commit, getters }, id) {
 			console.log(id)
-			try {
-				const auth = getAuth();
-				const user = auth.currentUser;
-				await deleteUser(user);
-				const usersRef = ref(database, `${USER_DATABASE_PATH}`)
-				const usersRecord = await get(usersRef)
-				if (usersRecord.exists()) {
-					await set(ref(database, `${USER_DATABASE_PATH}/${id}`), null)
-				}
+			// try {
+			// 	const auth = getAuth();
+			// 	const user = auth.currentUser;
+			// 	await deleteUser(user);
+			// 	const usersRef = ref(database, `${USER_DATABASE_PATH}`)
+			// 	const usersRecord = await get(usersRef)
+			// 	if (usersRecord.exists()) {
+			// 		await set(ref(database, `${USER_DATABASE_PATH}/${id}`), null)
+			// 	}
 
-				const users = getters.getUsers
-				users.forEach((user, index) => {
-					if (user.id == id) {
-						commit('removeUser', index)
-					}
-				})
+			// 	const users = getters.getUsers
+			// 	users.forEach((user, index) => {
+			// 		if (user.id == id) {
+			// 			commit('removeUser', index)
+			// 		}
+			// 	})
 
-			} catch (e) {
-				console.log(e)
-			}
+			// } catch (e) {
+			// 	console.log(e)
+			// }
 		}
 
 	},
@@ -205,6 +219,12 @@ export const registration = {
 		},
 		setCurrentUser(state, name) {
 			state.currentUserName = name
+		},
+		setCurrentUserId(state, id) {
+			state.currentUserId = id
+		},
+		setCurrentUserUid(state, uid) {
+			state.currentUserUid = uid
 		},
 		editUser(state, user) {
 			state.users.forEach(getUser => {

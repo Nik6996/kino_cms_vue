@@ -1,6 +1,12 @@
 <template>
   <div>
     <transition name="modal-window">
+      <div v-if="registration" class="registration">
+        <span @click="this.registration = false">X</span>
+        <registration></registration>
+      </div>
+    </transition>
+    <transition name="modal-window">
       <div v-if="isLogin" class="login">
         <div class="login__card">
           <div @click="isLogin = false" class="login__close">X</div>
@@ -23,11 +29,13 @@
 
     <header class="header">
       <div class="header__content">
-        <div class="header__logo"></div>
+        <div @click="$router.push('/')" class="header__logo">
+          <img :src="logoImg.url" alt="" />
+        </div>
         <div class="header__bar">
           <div class="header__bar-top">
             <div class="header__search">
-              <input placeholder="Поиск" type="text" />
+              <input v-model="search" placeholder="Поиск" type="text" />
             </div>
             <div class="header__links">
               <ul>
@@ -43,13 +51,30 @@
           </div>
           <div class="header__bottom">
             <div class="header__btns">
-              <div class="header__poster">Афиша</div>
-              <div class="header__schedule">Расписание</div>
-              <div class="header__soon">Скоро</div>
-              <div class="header__cinemas">Кинотеатры</div>
-              <div class="header__stick">Акции</div>
-              <select>
+              <div @click="$router.push('/poster')" class="header__poster">
+                Афиша
+              </div>
+              <div
+                @click="$router.push('/scheduleHome')"
+                class="header__schedule"
+              >
+                Расписание
+              </div>
+              <div @click="$router.push('/filmSoon')" class="header__soon">
+                Скоро
+              </div>
+              <div
+                @click="$router.push('/cinemasHome')"
+                class="header__cinemas"
+              >
+                Кинотеатры
+              </div>
+              <div @click="$router.push('/stockHome')" class="header__stick">
+                Акции
+              </div>
+              <select v-model="this.menuInfo">
                 <!-- v-model="selected" -->
+                <option disabled value="">Больше</option>
                 <option>О кинотеатре</option>
                 <option>Новости</option>
                 <option>Реклама</option>
@@ -68,8 +93,12 @@
         </div>
         <div class="header__login">
           <div class="right-bar">
-            <button @click="$router.push('/admin')">Админка</button>
-            <div class="user-name">{{ nameCurrentUser }}</div>
+            <button v-if="this.adminPage" @click="$router.push('/admin')">
+              Админка
+            </button>
+            <div @click="$router.push('/registration')" class="user-name">
+              {{ this.userName }}
+            </div>
             <div
               v-if="!isUserIn"
               @click="isLogin = true"
@@ -79,7 +108,7 @@
             </div>
             <div
               v-if="!isUserIn"
-              @click="$router.push('/registration')"
+              @click="this.registration = true"
               class="header-btn btn-lg bg-purple"
             >
               Регистрация
@@ -100,6 +129,8 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Registration from "@/components/Registration.vue";
+
 export default {
   data() {
     return {
@@ -110,34 +141,96 @@ export default {
       isLogin: false,
       isUserIn: false,
       admin: "",
+      userName: "",
+      adminPage: false,
+      registration: false,
+      menuInfo: "",
+      search: "",
     };
+  },
+  components: {
+    Registration,
   },
   computed: {
     ...mapGetters({
       nameCurrentUser: "registration/getCurrentUserName",
+      currentUserUid: "registration/getCurrentUserUid",
+      logoImg: "logo/getLogo",
     }),
   },
 
   watch: {
+    search: {
+      handler(search) {
+        console.log(search);
+        this.searchFilm(search);
+        this.$router.push("/");
+      },
+    },
+    menuInfo: {
+      handler(info) {
+        if (info === "О кинотеатре") {
+          this.$router.push("/infoHome");
+        }
+        if (info === "Новости") {
+          this.$router.push("/newsHome");
+        }
+        if (info === "Реклама") {
+          this.$router.push("/advertisingHome");
+        }
+        if (info === "Кафе") {
+          this.$router.push("/cafeHome");
+        }
+        if (info === "Мобильные прил") {
+          this.$router.push("/mobile-app");
+        }
+        if (info === "Контакты") {
+          this.$router.push("/contactsHome");
+        }
+      },
+    },
     nameCurrentUser: {
       handler(user) {
         if (user) {
           this.isUserIn = true;
+          this.userName = user;
+          if (user === "Admin") {
+            this.adminPage = true;
+          }
         }
       },
     },
+    // currentUserUid: {
+    //   handler(uid) {
+    //     if (uid === "XcHQaAB2ZoSZh9GJlz96cEJ1JJi2") {
+    //       this.isUserIn = true;
+    //       this.userName = "Admin";
+    //     }
+    //   },
+    // },
   },
-  mounted() {
-    this.$store.dispatch("registration/load");
+  async mounted() {
+    await this.$store.dispatch("registration/load");
+    this.$store.dispatch("logo/load");
+    if (this.currentUserUid === "h9y3bTZZdVcjTCyFA0bRgdjdYyT2") {
+      this.isUserIn = true;
+      this.adminPage = true;
+      this.userName = "Admin";
+    }
     if (this.nameCurrentUser) {
       this.isUserIn = true;
     }
   },
   methods: {
+    searchFilm(search) {
+      this.$emit("searchFilms", search);
+    },
     logIn() {
       if (this.user.email && this.user.password) {
         this.$store.dispatch("registration/logIn", this.user);
         this.isLogin = false;
+        this.user.email = "";
+        this.user.password = "";
       } else {
         console.log("Введите логин и пароль");
       }
@@ -146,6 +239,10 @@ export default {
       await this.$store.dispatch("registration/logOff", this.user);
       this.isUserIn = false;
       this.nameCurrentUser = null;
+      this.userName = "";
+      this.adminPage = false;
+      this.user.email = "";
+      this.user.password = "";
     },
   },
 };
@@ -153,16 +250,22 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  margin-top: 20px;
+  padding-top: 20px;
+  margin: 0px 0px 20px 0px;
   &__content {
     display: flex;
     justify-content: space-around;
   }
 
   &__logo {
+    cursor: pointer;
     width: 200px;
     height: 100px;
     background-color: rgb(192, 192, 192);
+    img {
+      width: 200px;
+      height: 100px;
+    }
   }
 
   &__bar {
@@ -212,6 +315,7 @@ export default {
   &__btns {
     border: solid 2px black;
     display: flex;
+    background-color: white;
   }
 
   &__poster,
@@ -314,6 +418,27 @@ export default {
     border-radius: 5px;
   }
 }
+
+.registration {
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(126, 125, 125, 0.37);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    cursor: pointer;
+    position: absolute;
+    top: 20%;
+    right: 20%;
+    padding: 10px;
+    font-size: 30px;
+  }
+}
 .header-login {
   cursor: pointer;
 }
@@ -331,5 +456,6 @@ export default {
   margin-right: 20px;
   font-size: 25px;
   font-weight: 500;
+  cursor: pointer;
 }
 </style>

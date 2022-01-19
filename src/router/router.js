@@ -31,6 +31,22 @@ import UsersContent from '@/components/users/UsersContent'
 import UserChoice from '@/components/mailing/UserChoice'
 import Admin from '@/components/Admin'
 import Home from '@/components/Home'
+import Poster from '@/components/home/PosterHome'
+import Schedule from '@/components/home/ScheduleHome'
+import FilmsHome from '@/components/home/FilmsHome'
+import FilmSoonHome from '@/components/home/FilmSoonHome'
+import CinemasHome from '@/components/home/CinemasHome'
+import StockHome from '@/components/home/StockHome'
+import InfoHome from '@/components/home/info/InfoHome'
+import NewsHome from '@/components/home/info/NewsHome'
+import CafeHome from '@/components/home/info/CafeHome'
+import AppHome from '@/components/home/info/AppHome'
+import ContactsHome from '@/components/home/info/ContactsHome'
+import AdvertisingHome from '@/components/home/info/AdvertisingHome'
+import CardFilm from '@/components/home/films/CardFilm'
+import CardFilmSoon from '@/components/home/films/CardFilmSoon'
+import CinemaCardHome from '@/components/home/cinemas/CinemaCardHome'
+import HallCardHome from '@/components/home/cinemas/HallCardHome'
 
 
 import { createRouter, createWebHashHistory } from "vue-router";
@@ -38,7 +54,77 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
 	{
 		path: '/',
-		component: Home
+		component: Home,
+		children: [
+			{
+				path: '/film/:id',
+				component: CardFilm
+			},
+			{
+				path: '/cinema/:id',
+				component: CinemaCardHome
+			},
+			{
+				path: '/film/soon/:id',
+				component: CardFilmSoon
+			},
+			{
+				path: '/cinema/hall/:id',
+				component: HallCardHome
+			},
+			{
+				path: '/',
+				component: FilmsHome
+			},
+			{
+				path: '/registration',
+				component: Registration,
+			},
+			{
+				path: '/poster',
+				component: Poster
+			},
+			{
+				path: '/scheduleHome',
+				component: Schedule
+			},
+			{
+				path: '/filmSoon',
+				component: FilmSoonHome
+			},
+			{
+				path: '/cinemasHome',
+				component: CinemasHome
+			},
+			{
+				path: '/stockHome',
+				component: StockHome
+			},
+			{
+				path: '/infoHome',
+				component: InfoHome
+			},
+			{
+				path: '/newsHome',
+				component: NewsHome
+			},
+			{
+				path: '/advertisingHome',
+				component: AdvertisingHome
+			},
+			{
+				path: '/cafeHome',
+				component: CafeHome
+			},
+			{
+				path: '/mobile-app',
+				component: AppHome
+			},
+			{
+				path: '/contactsHome',
+				component: ContactsHome
+			},
+		]
 	},
 	//Админка
 	{
@@ -49,10 +135,7 @@ const routes = [
 				path: '/banners',
 				component: Banners
 			},
-			{
-				path: '/registration',
-				component: Registration,
-			},
+
 			{
 				path: '/statistic',
 				component: Statistic

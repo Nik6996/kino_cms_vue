@@ -18,6 +18,7 @@ import { contactsPage } from './modules/pages/contacts'
 import { customPage } from './modules/pages/custom'
 import { registration } from './modules/registration'
 import { mailing } from './modules/mailing'
+import { logo } from './modules/logo'
 
 export default createStore({
 
@@ -39,6 +40,7 @@ export default createStore({
 		contactsPage: contactsPage,
 		customPage: customPage,
 		registration: registration,
-		mailing: mailing
+		mailing: mailing,
+		logo: logo
 	}
 })
