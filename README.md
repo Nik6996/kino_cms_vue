@@ -1,5 +1,5 @@
 # kinocms_vue
-https://plucky-weaver-307407.web.app/#/
+ Demo:  https://plucky-weaver-307407.web.app/#/
 ## Project setup
 ```
 npm install
