@@ -33,11 +33,14 @@ export default {
 .card {
   //background-color: yellowgreen;
   width: 230px;
-  height: 400px;
+  height: 420px;
   margin: 10px;
+
   &__content {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
   }
 
   &__img {
@@ -60,6 +63,7 @@ export default {
     font-size: 17px;
     border-radius: 10px;
     background-color: green;
+    margin-bottom: 10px;
   }
 }
 </style>

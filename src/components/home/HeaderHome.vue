@@ -10,7 +10,7 @@
       <div v-if="isLogin" class="login">
         <div class="login__card">
           <div @click="isLogin = false" class="login__close">X</div>
-          <div class="login__title">Войти в систему</div>
+          <div class="login__title">{{ $t("header.logIn") }}</div>
           <div class="login__line"></div>
           <div class="login__email">
             <input v-model="user.email" placeholder="Email" type="text" />
@@ -22,7 +22,9 @@
               type="password"
             />
           </div>
-          <button @click="logIn()" class="login__btn">Войти</button>
+          <button @click="logIn()" class="login__btn">
+            {{ $t("header.logInBtn") }}
+          </button>
         </div>
       </div></transition
     >
@@ -45,47 +47,49 @@
               </ul>
             </div>
             <div class="header__contacts">
-              <span>(048) 777-77-77</span>
-              <span>(048) 777-77-77</span>
+              <span><a href="tel:0487777777">(048) 777-77-77</a></span>
+              <span><a href="tel:0487777777">(048) 777-77-77</a></span>
             </div>
           </div>
           <div class="header__bottom">
             <div class="header__btns">
               <div @click="$router.push('/poster')" class="header__poster">
-                Афиша
+                {{ $t("header.poster") }}
               </div>
               <div
                 @click="$router.push('/scheduleHome')"
                 class="header__schedule"
               >
-                Расписание
+                {{ $t("header.schedule") }}
               </div>
               <div @click="$router.push('/filmSoon')" class="header__soon">
-                Скоро
+                {{ $t("header.soon") }}
               </div>
               <div
                 @click="$router.push('/cinemasHome')"
                 class="header__cinemas"
               >
-                Кинотеатры
+                {{ $t("header.cinemas") }}
               </div>
               <div @click="$router.push('/stockHome')" class="header__stick">
-                Акции
+                {{ $t("header.stock") }}
               </div>
               <select v-model="this.menuInfo">
                 <!-- v-model="selected" -->
-                <option disabled value="">Больше</option>
-                <option>О кинотеатре</option>
-                <option>Новости</option>
-                <option>Реклама</option>
-                <option>Кафе</option>
-                <option>Мобильные прил</option>
-                <option>Контакты</option>
+                <option disabled value="">{{ $t("header.more") }}</option>
+                <option>{{ $t("header.info") }}</option>
+                <option>{{ $t("header.cafe") }}</option>
+                <option>{{ $t("header.vip") }}</option>
+                <option>{{ $t("header.advertising") }}</option>
+                <option>{{ $t("header.childrens") }}</option>
+                <option>{{ $t("header.contacts") }}</option>
               </select>
             </div>
+
             <div class="header__lang">
-              <select>
-                <option>Рус</option>
+              <select v-model="this.leng">
+                <option disabled value="">Язык</option>
+                <option selected>Рус</option>
                 <option>Укр</option>
               </select>
             </div>
@@ -104,21 +108,21 @@
               @click="isLogin = true"
               class="header-login btn-lg bg-purple"
             >
-              Войти
+              {{ $t("header.logInBtn") }}
             </div>
             <div
               v-if="!isUserIn"
               @click="this.registration = true"
               class="header-btn btn-lg bg-purple"
             >
-              Регистрация
+              {{ $t("header.registration") }}
             </div>
             <div
               @click="logOff()"
               v-if="isUserIn"
               class="header-btn btn-lg bg-purple"
             >
-              Выйти
+              {{ $t("header.logOff") }}
             </div>
           </div>
         </div>
@@ -146,6 +150,7 @@ export default {
       registration: false,
       menuInfo: "",
       search: "",
+      leng: "",
     };
   },
   components: {
@@ -167,22 +172,32 @@ export default {
         this.$router.push("/");
       },
     },
+    leng: {
+      handler(leng) {
+        if (leng === "Укр") {
+          this.setLocale("ua");
+        } else {
+          this.setLocale("ru");
+        }
+      },
+    },
     menuInfo: {
       handler(info) {
         if (info === "О кинотеатре") {
           this.$router.push("/infoHome");
         }
-        if (info === "Новости") {
-          this.$router.push("/newsHome");
+        if (info === "Кафе") {
+          this.$router.push("/cafeHome");
+        }
+        if (info === "Vip-зал") {
+          this.$router.push("/vip-hall");
         }
         if (info === "Реклама") {
           this.$router.push("/advertisingHome");
         }
-        if (info === "Кафе") {
-          this.$router.push("/cafeHome");
-        }
-        if (info === "Мобильные прил") {
-          this.$router.push("/mobile-app");
+
+        if (info === "Детская комната") {
+          this.$router.push("/childrens-room");
         }
         if (info === "Контакты") {
           this.$router.push("/contactsHome");
@@ -222,6 +237,9 @@ export default {
     }
   },
   methods: {
+    setLocale(locale) {
+      this.$i18n.locale = locale;
+    },
     searchFilm(search) {
       this.$emit("searchFilms", search);
     },
@@ -305,6 +323,10 @@ export default {
     flex-direction: column;
     font-size: 20px;
     font-weight: 500;
+
+    a {
+      color: rgb(143, 140, 140);
+    }
   }
 
   &__bottom {
@@ -349,6 +371,15 @@ export default {
 .right-bar {
   font-size: 30px;
   display: flex;
+  align-items: center;
+  button {
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 7px;
+    background-color: rgb(123, 253, 91);
+  }
 }
 .header-btn {
   cursor: pointer;
@@ -454,8 +485,14 @@ export default {
 }
 .user-name {
   margin-right: 20px;
+  margin-left: 20px;
   font-size: 25px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
+  background-color: white;
+  display: flex;
+  align-items: center;
+
+  border-radius: 10px;
 }
 </style>

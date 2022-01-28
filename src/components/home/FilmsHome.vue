@@ -7,7 +7,7 @@
             :spaceBetween="30"
             :centeredSlides="true"
             :autoplay="{
-              delay: 2000,
+              delay: 3000,
               disableOnInteraction: false,
             }"
             :pagination="{
@@ -127,6 +127,7 @@ export default {
   background-color: white;
   width: 1000px;
   margin: 0 auto;
+  border-radius: 10px;
   &__slider {
   }
 
@@ -149,6 +150,7 @@ export default {
   }
 
   &__news {
+    padding-bottom: 20px;
   }
   &__not-found {
     display: flex;

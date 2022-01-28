@@ -363,6 +363,7 @@ export default {
       if (this.nameCurrentUser) {
         console.log("редактировать");
       } else {
+        await this.$store.dispatch("registration/saveUser", this.user);
         console.log("создать новый");
       }
       console.log("12345");

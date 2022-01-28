@@ -15,6 +15,9 @@
           <li @click="$router.push('/cinemas')" class="nav-item">
             <p>Кинотеатры</p>
           </li>
+          <li @click="$router.push('/schedule')" class="nav-item">
+            <p>Расписание</p>
+          </li>
           <li @click="$router.push('/news')" class="nav-item">
             <p>Новости</p>
           </li>
@@ -47,7 +50,7 @@ export default {};
   margin-top: 120px;
   margin-left: 20px;
   position: fixed;
-  height: 400px;
+  height: 430px;
 }
 
 .nav-pills .nav-link {

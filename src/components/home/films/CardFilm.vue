@@ -33,17 +33,7 @@
             <button>Купить</button>
             <div class="film__name">{{ name }}</div>
             <div class="film__description">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Labore
-              sequi deleniti nulla fuga alias explicabo porro accusantium
-              excepturi optio maxime voluptate iusto blanditiis dolorum
-              architecto ullam velit voluptatibus, sint eos. Necessitatibus
-              officiis inventore saepe qui odio recusandae tempora iste dolorem
-              delectus cum, ducimus nihil nesciunt, ab atque temporibus
-              explicabo illum aliquid, nam commodi autem. Reiciendis tempore
-              porro dolorem quam amet! Consequuntur nulla quae minima dolor
-              quidem maiores quos dicta mollitia esse sunt sint fugit molestias
-              saepe odit deserunt id tempora quasi, aliquid vel molestiae qui?
-              Officia, labore! At, blanditiis beatae?
+              {{ description }}
             </div>
           </div>
         </div>
@@ -96,6 +86,7 @@ export default {
       mainImg: "",
       name: "",
       video: "",
+      description: "",
     };
   },
   components: {
@@ -115,6 +106,7 @@ export default {
         this.mainImg = film.itemUa.mainImgUrl.url;
         this.video = film.itemUa.refTrailer;
         const gallary = film.itemUa.galleryImgUrl;
+        this.description = film.itemUa.descriptionFilm;
 
         gallary.forEach((item) => {
           this.gallary.push(item.imageStorage);
@@ -206,6 +198,7 @@ export default {
   &__main-img {
     width: 300px;
     height: 300px;
+    margin-bottom: 20px;
     //  background-color: cadetblue;
     img {
       width: 300px;

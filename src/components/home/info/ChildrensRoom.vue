@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="cafe">
-      <div class="cafe__content">
-        <div class="cafe__main-img"><img :src="img" alt="" /></div>
-        <div class="cafe__title">{{ name }}</div>
-        <div class="cafe__description">
+    <div class="childrens">
+      <div class="childrens__content">
+        <div class="childrens__main-img"><img :src="img" alt="" /></div>
+        <div class="childrens__title">{{ name }}</div>
+        <div class="childrens__description">
           <span>{{ description }}</span>
         </div>
 
-        <div class="cafe__gallary">
+        <div class="childrens__gallary">
           <swiper
             :spaceBetween="30"
             :centeredSlides="true"
@@ -54,15 +54,15 @@ export default {
     SwiperSlide,
   },
   async mounted() {
-    await this.$store.dispatch("cafePage/load");
+    await this.$store.dispatch("childrensPage/load");
   },
   watch: {
-    cafe: {
-      handler(cafe) {
-        this.img = cafe.cafeUa.mainImg.imgUrl;
-        this.name = cafe.cafeUa.name;
-        this.description = cafe.cafeUa.description;
-        const gallary = cafe.cafeUa.gallary;
+    childrens: {
+      handler(childrens) {
+        this.img = childrens.childrensUa.mainImg.imgUrl;
+        this.name = childrens.childrensUa.name;
+        this.description = childrens.childrensUa.description;
+        const gallary = childrens.childrensUa.gallary;
 
         gallary.forEach((item) => {
           this.gallary.push(item.url);
@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cafe: "cafePage/getCafe",
+      childrens: "childrensPage/getChildrens",
     }),
   },
   methods: {},
@@ -81,7 +81,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cafe {
+.childrens {
   &__content {
     width: 1300px;
     margin: 0 auto;

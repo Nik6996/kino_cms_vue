@@ -64,10 +64,10 @@ export const contactsPage = {
     },
 
     async removeContact({ commit, getters }, item) {
-      console.log(item.id)
+
       const contactsItem = getters.getContacts;
       const contacts = contactsItem.listCinema;
-      console.log(item.logo.id)
+
       if (item.logo.url) {
         const storageRef = refStorage(storage, `${DATABASE_PATH}/${CONTACTS_PAGE_DATABASE_PATH}/${item.logo.id}`)
         await deleteObject(storageRef)

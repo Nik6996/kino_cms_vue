@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="cafe">
-      <div class="cafe__content">
-        <div class="cafe__main-img"><img :src="img" alt="" /></div>
-        <div class="cafe__title">{{ name }}</div>
-        <div class="cafe__description">
+    <div class="stock">
+      <div class="stock__content">
+        <div class="stock__main-img"><img :src="img" alt="" /></div>
+        <div class="stock__title">{{ name }}</div>
+        <div class="stock__description">
           <span>{{ description }}</span>
         </div>
 
-        <div class="cafe__gallary">
+        <div class="stock__gallary">
           <swiper
             :spaceBetween="30"
             :centeredSlides="true"
@@ -54,15 +54,16 @@ export default {
     SwiperSlide,
   },
   async mounted() {
-    await this.$store.dispatch("cafePage/load");
+    await this.$store.dispatch("stock/loadStock");
+    this.loadStock();
   },
   watch: {
-    cafe: {
-      handler(cafe) {
-        this.img = cafe.cafeUa.mainImg.imgUrl;
-        this.name = cafe.cafeUa.name;
-        this.description = cafe.cafeUa.description;
-        const gallary = cafe.cafeUa.gallary;
+    stocks: {
+      handler(stock) {
+        this.img = stock.stockUa.mainImg.imgUrl;
+        this.name = stock.stockUa.name;
+        this.description = stock.stockUa.description;
+        const gallary = stock.stockUa.gallary;
 
         gallary.forEach((item) => {
           this.gallary.push(item.url);
@@ -73,29 +74,40 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cafe: "cafePage/getCafe",
+      stockList: "stock/getStock",
     }),
   },
-  methods: {},
+  methods: {
+    async loadStock() {
+      const id = this.$route.params.id;
+
+      await this.stockList.forEach((item) => {
+        if (id == item.id) {
+          this.stocks = item;
+        }
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.cafe {
+.stock {
   &__content {
     width: 1300px;
     margin: 0 auto;
-
+    background-color: rgb(134, 134, 134);
     padding: 30px;
+    border-radius: 10px;
   }
 
   &__main-img {
     margin: 0 auto;
-    width: 900px;
+    width: 700px;
     height: 400px;
     background-color: rosybrown;
     img {
-      width: 900px;
+      width: 700px;
       height: 400px;
       object-fit: cover;
     }

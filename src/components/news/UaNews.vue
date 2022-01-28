@@ -11,6 +11,7 @@
               type="text"
             />
           </div>
+
           <div class="news__calendar">
             <div class="news__published">
               <span>Дата публiкацiї</span>
@@ -238,8 +239,6 @@ export default {
 <style lang="scss" scoped>
 .news {
   margin-top: 40px;
-  &__content {
-  }
 
   &__header {
     display: flex;

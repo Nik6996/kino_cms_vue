@@ -7,6 +7,7 @@ import Newsletter from "@/pages/Newsletter"
 import Stock from "@/pages/Stock"
 import PagesKino from "@/pages/PagesKino"
 import Users from "@/pages/Users"
+import ScheduleAdmin from '@/pages/Schedule'
 import CreateFilm from "@/components/films/filmListNow/CreateFilm"
 import CreateFilmSoon from "@/components/films/filmListSoon/CreateFilmSoon"
 import FilmsContent from '@/components/films/FilmsContent';
@@ -38,15 +39,19 @@ import FilmSoonHome from '@/components/home/FilmSoonHome'
 import CinemasHome from '@/components/home/CinemasHome'
 import StockHome from '@/components/home/StockHome'
 import InfoHome from '@/components/home/info/InfoHome'
-import NewsHome from '@/components/home/info/NewsHome'
+import VipHall from '@/components/home/info/VipHall'
 import CafeHome from '@/components/home/info/CafeHome'
-import AppHome from '@/components/home/info/AppHome'
+import ChildrensRoom from '@/components/home/info/ChildrensRoom'
 import ContactsHome from '@/components/home/info/ContactsHome'
 import AdvertisingHome from '@/components/home/info/AdvertisingHome'
 import CardFilm from '@/components/home/films/CardFilm'
 import CardFilmSoon from '@/components/home/films/CardFilmSoon'
 import CinemaCardHome from '@/components/home/cinemas/CinemaCardHome'
 import HallCardHome from '@/components/home/cinemas/HallCardHome'
+import StockCardHome from '@/components/home/stock/StockCardHome'
+import ScheduleContent from '@/components/schedule/ScheduleContent'
+import ScheduleCard from '@/components/schedule/ScheduleCard'
+import TicketBooking from '@/components/home/TicketBooking'
 
 
 import { createRouter, createWebHashHistory } from "vue-router";
@@ -71,6 +76,16 @@ const routes = [
 			{
 				path: '/cinema/hall/:id',
 				component: HallCardHome
+			},
+			{
+				path: '/stock/home/:id',
+				component: StockCardHome
+			},
+			{
+				path: '/ticket/booking/:id',
+				component: TicketBooking,
+				name: 'filmId',
+				props: true
 			},
 			{
 				path: '/',
@@ -105,8 +120,8 @@ const routes = [
 				component: InfoHome
 			},
 			{
-				path: '/newsHome',
-				component: NewsHome
+				path: '/vip-hall',
+				component: VipHall
 			},
 			{
 				path: '/advertisingHome',
@@ -117,8 +132,8 @@ const routes = [
 				component: CafeHome
 			},
 			{
-				path: '/mobile-app',
-				component: AppHome
+				path: '/childrens-room',
+				component: ChildrensRoom
 			},
 			{
 				path: '/contactsHome',
@@ -215,6 +230,24 @@ const routes = [
 						name: 'editHall',
 						props: true
 					}
+				]
+			},
+			{
+				path: '/schedule',
+				component: ScheduleAdmin,
+				children: [
+					{
+						path: '',
+						component: ScheduleContent
+					},
+					{
+						path: '/seance/create',
+						component: ScheduleCard
+					},
+					{
+						path: 'edit/:id',
+						component: ScheduleCard,
+					},
 				]
 			},
 			{

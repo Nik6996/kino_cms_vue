@@ -43,6 +43,7 @@ export default {};
 
 <style lang="scss" scoped>
 .footer {
+  background-color: white;
   margin-top: 20px;
   padding: 10px;
   &__content {
